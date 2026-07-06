@@ -1,17 +1,145 @@
-    855       1 david_m+  5-19:32:06 /usr/bin/tmux new-session -d -s David - Master -c /home/david_master
-    962     920 david_m+  5-19:32:05 claude --continue --dangerously-skip-permissions
-  81206     855 david_m+  4-19:35:13 sh -c AGENT2TELEGRAM_CONFIG=/home/david_master/.config/agent2telegram/david-claude.json PYTHONPATH=/home/david_master/.agent2telegram-src /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json >> /home/david_master/.local/state/agent2telegram/david-claude/run.log 2>&1
-  81208   81206 david_m+  4-19:35:13 /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json
-  84994     781 david_m+  4-19:25:33 /home/david_master/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run
- 374761   84994 david_m+  2-08:16:19 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
- 374835   84994 david_m+  2-08:16:06 node /home/david_master/.hermes/lsp/bin/bash-language-server start
- 478441  478406 david_m+  1-09:32:45 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
- 479243       1 david_m+  1-09:30:32 /usr/bin/python3 -m agent2telegram run
- 480030   84994 david_m+  1-09:23:09 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes dashboard --host 127.0.0.1 --port 9119 --no-open
- 527786       1 david_m+    23:04:47 /bin/bash -c source /home/david_master/.claude/shell-snapshots/snapshot-bash-1783189363532-tdlvs6.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval 'cd ~/humanagentwiki python3 - <<'"'"'PY'"'"' import os,time,shutil p=os.path.expanduser("~/humanagentwiki/.env") shutil.copy(p, p+".bak."+time.strftime("%Y%m%d_%H%M%S")) lines=open(p,encoding="utf-8").read().splitlines() out=[]; found=False for ln in lines:     if ln.strip().startswith("WEB_AUTH="):         out.append("WEB_AUTH=david:Pelesany126"); found=True     else:         out.append(ln) if not found: out.append("WEB_AUTH=david:Pelesany126") open(p,"w",encoding="utf-8").write("\n".join(out)+"\n") os.chmod(p,0o600) print("WEB_AUTH aktualizovan (found_existing=%s)"%found) PY # restart HAW Web: kill listener na 8808 podle PID, pak spust daemon restart cmd lp=$(ss -tlnp 2>/dev/null | grep '"'"':8808 '"'"' | grep -oE '"'"'pid=[0-9]+'"'"' | cut -d= -f2 | sort -u) echo "8808 listener pid: ${lp:-zadny}" for p in $lp; do kill "$p" 2>/dev/null; done cd /home/david_master/humanagentwiki && nohup sh -c '"'"'set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1'"'"' >/dev/null 2>&1 & echo "HAW Web restart spusten"' && pwd -P >| /tmp/claude-b913-cwd
- 527787  527786 david_m+    23:04:47 sh -c set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1
- 632633  478441 david_m+       00:01 rsync -a /home/david_master/.hermes/config.yaml /home/david_master/.hermes/channel_directory.json /home/david_master/.hermes/crews_registry.json /home/david_master/.hermes/cron /home/david_master/.hermes/deepresearch /home/david_master/.hermes/finance /home/david_master/.hermes/infrastructure /home/david_master/.hermes/legal-lite /home/david_master/.hermes/marketing-crew /home/david_master/.hermes/profiles /home/david_master/.hermes/scripts /home/david_master/.hermes/skills /home/david_master/server-agent-env-backup/snapshot/.hermes/ --exclude=.git --exclude=.env --exclude=auth.json --exclude=auth.lock --exclude=google*token* --exclude=google_client_secret.json --exclude=*.lock --exclude=*.pid --exclude=*.sqlite* --exclude=__pycache__ --exclude=node_modules --exclude=venv --exclude=runs/*/attachments --exclude=audio_cache --exclude=image_cache --exclude=cache --exclude=logs --exclude=sessions --exclude=state --exclude=memories --exclude=sandboxes
- 632635  632633 david_m+       00:01 rsync -a /home/david_master/.hermes/config.yaml /home/david_master/.hermes/channel_directory.json /home/david_master/.hermes/crews_registry.json /home/david_master/.hermes/cron /home/david_master/.hermes/deepresearch /home/david_master/.hermes/finance /home/david_master/.hermes/infrastructure /home/david_master/.hermes/legal-lite /home/david_master/.hermes/marketing-crew /home/david_master/.hermes/profiles /home/david_master/.hermes/scripts /home/david_master/.hermes/skills /home/david_master/server-agent-env-backup/snapshot/.hermes/ --exclude=.git --exclude=.env --exclude=auth.json --exclude=auth.lock --exclude=google*token* --exclude=google_client_secret.json --exclude=*.lock --exclude=*.pid --exclude=*.sqlite* --exclude=__pycache__ --exclude=node_modules --exclude=venv --exclude=runs/*/attachments --exclude=audio_cache --exclude=image_cache --exclude=cache --exclude=logs --exclude=sessions --exclude=state --exclude=memories --exclude=sandboxes
- 632636  632635 david_m+       00:01 rsync -a /home/david_master/.hermes/config.yaml /home/david_master/.hermes/channel_directory.json /home/david_master/.hermes/crews_registry.json /home/david_master/.hermes/cron /home/david_master/.hermes/deepresearch /home/david_master/.hermes/finance /home/david_master/.hermes/infrastructure /home/david_master/.hermes/legal-lite /home/david_master/.hermes/marketing-crew /home/david_master/.hermes/profiles /home/david_master/.hermes/scripts /home/david_master/.hermes/skills /home/david_master/server-agent-env-backup/snapshot/.hermes/ --exclude=.git --exclude=.env --exclude=auth.json --exclude=auth.lock --exclude=google*token* --exclude=google_client_secret.json --exclude=*.lock --exclude=*.pid --exclude=*.sqlite* --exclude=__pycache__ --exclude=node_modules --exclude=venv --exclude=runs/*/attachments --exclude=audio_cache --exclude=image_cache --exclude=cache --exclude=logs --exclude=sessions --exclude=state --exclude=memories --exclude=sandboxes
- 632643  478441 david_m+       00:01 /bin/bash -c tmux list-sessions 2>/dev/null > /home/david_master/server-agent-env-backup/system/tmux-sessions.txt || true ps -eo pid,ppid,user,etime,cmd | rg 'hermes|agent2telegram|codex|claude|humanagentwiki|tmux' > /home/david_master/server-agent-env-backup/system/processes.txt || true systemctl --user list-units --type=service --no-pager > /home/david_master/server-agent-env-backup/system/user-services.txt 2>/dev/null || true crontab -l > /home/david_master/server-agent-env-backup/system/crontab.txt 2>/dev/null || true ufw status verbose > /home/david_master/server-agent-env-backup/system/ufw-status.txt 2>/dev/null || true
- 632647  632643 david_m+       00:00 rg hermes|agent2telegram|codex|claude|humanagentwiki|tmux
+    PID    PPID USER         ELAPSED CMD
+    784     781 david_m+  5-20:10:35 (sd-pam)
+  76029   76028 root      4-20:54:30 (sd-pam)
+    103       2 root      5-20:10:56 [acpi_thermal_pm]
+    742       1 root      5-20:10:35 /sbin/agetty -o -p -- \u --noclear tty1 linux
+   1010     965 david_m+  5-20:10:33 agy --continue --dangerously-skip-permissions
+  79910     781 david_m+  4-20:23:39 /usr/libexec/at-spi-bus-launcher
+ 481747     781 david_m+  1-09:42:17 /usr/libexec/at-spi2-registryd --use-gnome-session
+     90       2 root      5-20:10:57 [ata_sff]
+ 527786       1 david_m+    23:43:15 /bin/bash -c source /home/david_master/.claude/shell-snapshots/snapshot-bash-1783189363532-tdlvs6.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval 'cd ~/humanagentwiki python3 - <<'"'"'PY'"'"' import os,time,shutil p=os.path.expanduser("~/humanagentwiki/.env") shutil.copy(p, p+".bak."+time.strftime("%Y%m%d_%H%M%S")) lines=open(p,encoding="utf-8").read().splitlines() out=[]; found=False for ln in lines:     if ln.strip().startswith("WEB_AUTH="):         out.append("WEB_AUTH=david:Pelesany126"); found=True     else:         out.append(ln) if not found: out.append("WEB_AUTH=david:Pelesany126") open(p,"w",encoding="utf-8").write("\n".join(out)+"\n") os.chmod(p,0o600) print("WEB_AUTH aktualizovan (found_existing=%s)"%found) PY # restart HAW Web: kill listener na 8808 podle PID, pak spust daemon restart cmd lp=$(ss -tlnp 2>/dev/null | grep '"'"':8808 '"'"' | grep -oE '"'"'pid=[0-9]+'"'"' | cut -d= -f2 | sort -u) echo "8808 listener pid: ${lp:-zadny}" for p in $lp; do kill "$p" 2>/dev/null; done cd /home/david_master/humanagentwiki && nohup sh -c '"'"'set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1'"'"' >/dev/null 2>&1 & echo "HAW Web restart spusten"' && pwd -P >| /tmp/claude-b913-cwd
+ 637571  478441 david_m+       00:02 /bin/bash -c set -e cd /home/david_master/server-agent-env-backup git reset --soft 07c23f3 git reset /home/david_master/.local/bin/weekly-server-agent-backup.sh || true # Add weekly cron if missing. TMP=$(mktemp) crontab -l 2>/dev/null | grep -v 'weekly-server-agent-backup.sh' > "$TMP" || true echo '15 3 * * 0 /home/david_master/.local/bin/weekly-server-agent-backup.sh' >> "$TMP" crontab "$TMP" rm -f "$TMP" crontab -l | tail -20 cd /home/david_master/server-agent-env-backup git status --short --branch git log --oneline -4 tail -80 /home/david_master/.local/state/server-agent-env-backup/weekly-backup.log
+ 637574  637571 david_m+       00:02 bash /home/david_master/.local/bin/weekly-server-agent-backup.sh
+     88       2 root      5-20:10:57 [blkcg_punt_bio]
+    134       2 root      5-20:10:56 [charger_manager]
+    962     920 david_m+  5-20:10:33 claude --continue --dangerously-skip-permissions
+ 478441  478406 david_m+  1-10:11:13 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
+     18       2 root      5-20:10:57 [cpuhp/0]
+     19       2 root      5-20:10:57 [cpuhp/1]
+     25       2 root      5-20:10:57 [cpuhp/2]
+ 366906       1 root      2-10:15:20 /usr/sbin/cron -f -P
+    184       2 root      5-20:10:55 [cryptd]
+    702       1 message+  5-20:10:35 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1142     781 david_m+  5-20:10:31 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 481728   79910 david_m+  1-09:42:17 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/run/user/1000/at-spi/bus
+     93       2 root      5-20:10:57 [devfreq_wq]
+    100       2 root      5-20:10:56 [ecryptfs-kthrea]
+     92       2 root      5-20:10:57 [edac-poller]
+    321       2 root      5-20:10:52 [ext4-rsv-conver]
+    708       1 root      5-20:10:35 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+  84994     781 david_m+  4-20:04:01 /home/david_master/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run
+ 480030   84994 david_m+  1-10:01:37 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes dashboard --host 127.0.0.1 --port 9119 --no-open
+     16       2 root      5-20:10:57 [idle_inject/0]
+     20       2 root      5-20:10:57 [idle_inject/1]
+     26       2 root      5-20:10:57 [idle_inject/2]
+     32       2 root      5-20:10:57 [inet_frag_wq]
+    113       2 root      5-20:10:56 [ipv6_addrconf]
+    710       1 root      5-20:10:35 /usr/sbin/irqbalance --foreground
+    320       2 root      5-20:10:52 [jbd2/sda1-8]
+    424       2 root      5-20:10:52 [kaluad]
+     33       2 root      5-20:10:57 [kauditd]
+     87       2 root      5-20:10:57 [kblockd]
+     37       2 root      5-20:10:57 [kcompactd0]
+     31       2 root      5-20:10:57 [kdevtmpfs]
+     39       2 root      5-20:10:57 [khugepaged]
+     34       2 root      5-20:10:57 [khungtaskd]
+     86       2 root      5-20:10:57 [kintegrityd]
+    428       2 root      5-20:10:52 [kmpath_handlerd]
+    425       2 root      5-20:10:52 [kmpath_rdacd]
+    427       2 root      5-20:10:52 [kmpathd]
+     38       2 root      5-20:10:57 [ksmd]
+     13       2 root      5-20:10:57 [ksoftirqd/0]
+     22       2 root      5-20:10:57 [ksoftirqd/1]
+     28       2 root      5-20:10:57 [ksoftirqd/2]
+    125       2 root      5-20:10:56 [kstrp]
+     99       2 root      5-20:10:56 [kswapd0]
+      2       0 root      5-20:10:57 [kthreadd]
+    102       2 root      5-20:10:56 [kthrotld]
+ 637218       2 root           01:10 [kworker/0:0]
+      8       2 root      5-20:10:57 [kworker/0:0H-kblockd]
+ 613591       2 root        04:12:59 [kworker/0:1-events]
+    117       2 root      5-20:10:56 [kworker/0:1H-kblockd]
+ 609890       2 root        05:05:34 [kworker/0:2-events]
+ 607353       2 root        05:41:52 [kworker/1:0-events]
+     24       2 root      5-20:10:57 [kworker/1:0H-events_highpri]
+    112       2 root      5-20:10:56 [kworker/1:1H-kblockd]
+ 620293       2 root        02:57:26 [kworker/1:2]
+ 585501       2 root        10:23:26 [kworker/2:0-events]
+     30       2 root      5-20:10:57 [kworker/2:0H-events_highpri]
+     96       2 root      5-20:10:57 [kworker/2:1H-kblockd]
+ 627196       2 root        01:39:49 [kworker/2:2]
+ 635406       2 root           12:58 [kworker/u6:0-events_unbound]
+ 632193       2 root           41:23 [kworker/u6:1+events_unbound]
+ 637363       2 root           00:38 [kworker/u6:2-ext4-rsv-conversion]
+ 636463       2 root           05:58 [kworker/u6:3-ext4-rsv-conversion]
+ 637570       2 root           00:02 [kworker/u6:4-events_unbound]
+    129       2 root      5-20:10:56 [kworker/u7:0]
+     91       2 root      5-20:10:57 [md]
+     15       2 root      5-20:10:57 [migration/0]
+     21       2 root      5-20:10:57 [migration/1]
+     27       2 root      5-20:10:57 [migration/2]
+    111       2 root      5-20:10:56 [mld]
+     10       2 root      5-20:10:57 [mm_percpu_wq]
+ 366912       1 root      2-10:15:20 /sbin/multipathd -d -s
+      6       2 root      5-20:10:57 [netns]
+    711       1 root      5-20:10:35 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+ 374761   84994 david_m+  2-08:54:47 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
+ 374835   84994 david_m+  2-08:54:34 node /home/david_master/.hermes/lsp/bin/bash-language-server start
+     35       2 root      5-20:10:57 [oom_reaper]
+ 366907       1 root      2-10:15:20 /usr/libexec/packagekitd
+  59208       1 root      5-02:08:27 /usr/libexec/polkitd --no-debug
+  84473       1 postgres  4-20:06:08 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+  84475   84473 postgres  4-20:06:08 postgres: 14/main: checkpointer 
+  84476   84473 postgres  4-20:06:08 postgres: 14/main: background writer 
+  84477   84473 postgres  4-20:06:08 postgres: 14/main: walwriter 
+  84478   84473 postgres  4-20:06:08 postgres: 14/main: autovacuum launcher 
+  84479   84473 postgres  4-20:06:08 postgres: 14/main: stats collector 
+  84480   84473 postgres  4-20:06:08 postgres: 14/main: logical replication launcher 
+ 637681  637574 david_m+       00:00 ps -eo pid,ppid,user,etime,cmd --sort=cmd
+  84946       1 david_m+  4-20:04:10 .venv/bin/python cli.py serve
+ 527788  527787 david_m+    23:43:15 .venv/bin/python cli.py web --port 8808
+ 617121       1 david_m+    03:29:00 .venv/bin/python /home/david_master/lana-research/scripts/server.py --port 8811
+  81208   81206 david_m+  4-20:13:41 /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json
+ 479243       1 david_m+  1-10:09:00 /usr/bin/python3 -m agent2telegram run
+ 618625       1 david_m+    03:12:31 /usr/bin/python3 -m agentsmon dashboard
+    713       1 root      5-20:10:35 /usr/sbin/qemu-ga
+    273       2 root      5-20:10:53 [raid5wq]
+      3       2 root      5-20:10:57 [rcu_gp]
+      4       2 root      5-20:10:57 [rcu_par_gp]
+     14       2 root      5-20:10:57 [rcu_sched]
+     11       2 root      5-20:10:57 [rcu_tasks_rude_]
+     12       2 root      5-20:10:57 [rcu_tasks_trace]
+    714       1 syslog    5-20:10:35 /usr/sbin/rsyslogd -n -iNONE
+    105       2 root      5-20:10:56 [scsi_eh_0]
+    107       2 root      5-20:10:56 [scsi_eh_1]
+    181       2 root      5-20:10:56 [scsi_eh_2]
+    106       2 root      5-20:10:56 [scsi_tmf_0]
+    108       2 root      5-20:10:56 [scsi_tmf_1]
+    182       2 root      5-20:10:56 [scsi_tmf_2]
+    920     855 david_m+  5-20:10:34 -sh
+    965     855 david_m+  5-20:10:33 -sh
+  76222     855 david_m+  4-20:53:05 -sh
+  81206     855 david_m+  4-20:13:41 sh -c AGENT2TELEGRAM_CONFIG=/home/david_master/.config/agent2telegram/david-claude.json PYTHONPATH=/home/david_master/.agent2telegram-src /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json >> /home/david_master/.local/state/agent2telegram/david-claude/run.log 2>&1
+ 478406     855 david_m+  1-10:11:18 -sh
+ 527787  527786 david_m+    23:43:15 sh -c set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1
+      5       2 root      5-20:10:57 [slub_flushwq]
+    717       1 root      5-20:10:35 /usr/lib/snapd/snapd
+    758       1 root      5-20:10:35 sshd: /usr/sbin/sshd -D [listener] 1 of 10-100 startups
+ 637581     758 root           00:01 sshd: unknown [priv]
+ 637583  637581 sshd           00:01 sshd: unknown [net]
+      1       0 root      5-20:10:57 /sbin/init
+    781       1 david_m+  5-20:10:35 /lib/systemd/systemd --user
+  76028       1 root      4-20:54:30 /lib/systemd/systemd --user
+    396       1 root      5-20:10:52 /lib/systemd/systemd-journald
+    720       1 root      5-20:10:35 /lib/systemd/systemd-logind
+    663       1 systemd+  5-20:10:49 /lib/systemd/systemd-networkd
+    665       1 systemd+  5-20:10:49 /lib/systemd/systemd-resolved
+    563       1 systemd+  5-20:10:51 /lib/systemd/systemd-timesyncd
+    432       1 root      5-20:10:52 /lib/systemd/systemd-udevd
+    855       1 david_m+  5-20:10:34 /usr/bin/tmux new-session -d -s David - Master -c /home/david_master
+     89       2 root      5-20:10:57 [tpm_dev_wq]
+    777       1 root      5-20:10:35 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+    110       2 root      5-20:10:56 [vfio-irqfd-clea]
+     94       2 root      5-20:10:57 [watchdogd]
+     36       2 root      5-20:10:57 [writeback]
+    128       2 root      5-20:10:56 [zswap-shrink]

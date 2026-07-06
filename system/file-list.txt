@@ -104,7 +104,6 @@ snapshot/.hermes/finance/prompts/anomaly.md
 snapshot/.hermes/finance/prompts/cashflow.md
 snapshot/.hermes/finance/prompts/final_review.md
 snapshot/.hermes/finance/prompts/report_writer.md
-snapshot/.hermes/finance/runs/.gitkeep
 snapshot/.hermes/finance/scripts/run_finance.py
 snapshot/.hermes/hermes-architect/README.md
 snapshot/.hermes/hermes-architect/prompts/quality-editor.md
@@ -117,7 +116,6 @@ snapshot/.hermes/infrastructure/config/crew.yaml
 snapshot/.hermes/infrastructure/prompts/dashboard_curator.md
 snapshot/.hermes/infrastructure/prompts/db_steward.md
 snapshot/.hermes/infrastructure/prompts/deploy.md
-snapshot/.hermes/infrastructure/runs/.gitkeep
 snapshot/.hermes/infrastructure/scripts/01-security-fix.sh
 snapshot/.hermes/infrastructure/scripts/monitor.sh
 snapshot/.hermes/infrastructure/scripts/run_infra.py
@@ -137,7 +135,6 @@ snapshot/.hermes/legal-lite/prompts/compliance_checker.md
 snapshot/.hermes/legal-lite/prompts/final_review.md
 snapshot/.hermes/legal-lite/prompts/nda_drafter.md
 snapshot/.hermes/legal-lite/prompts/risk_assessor.md
-snapshot/.hermes/legal-lite/runs/.gitkeep
 snapshot/.hermes/legal-lite/scripts/run_legal.py
 snapshot/.hermes/marketing-crew/CODEX_REVIEW_INSTRUCTIONS.md
 snapshot/.hermes/marketing-crew/GITHUB_INSPIRATION_NOTES.md
@@ -168,12 +165,8 @@ snapshot/.hermes/marketing-crew/scripts/run_and_send_telegram.sh
 snapshot/.hermes/marketing-crew/scripts/run_marketing_audit.py
 snapshot/.hermes/marketing-crew/scripts/run_marketing_ext.py
 snapshot/.hermes/marketing-crew/scripts/website_probe.py
-snapshot/.hermes/news-agent/ai_auto_radar_history.txt
 snapshot/.hermes/news-agent/ai_auto_radar_topics.json
-snapshot/.hermes/news-agent/dedup.json
-snapshot/.hermes/news-agent/digest_last_sent.txt
 snapshot/.hermes/news-agent/digest_topics.json
-snapshot/.hermes/news-agent/sent_history.txt
 snapshot/.hermes/profiles/deepresearch-claude-opus/.skills_prompt_snapshot.json
 snapshot/.hermes/profiles/deepresearch-claude-opus/.update_check
 snapshot/.hermes/profiles/deepresearch-claude-opus/SOUL.md
@@ -203,23 +196,6 @@ snapshot/.hermes/scripts/security-audit-lite/audit_digest.py
 snapshot/.hermes/scripts/security-audit-lite/audit_failsafe.py
 snapshot/.hermes/scripts/security-audit-lite/auto_update.sh
 snapshot/.hermes/security-audit-lite/README.md
-snapshot/.hermes/security-audit-lite/facts-2026-06-30.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-01.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-02.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-03.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-04.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-05.txt
-snapshot/.hermes/security-audit-lite/facts-2026-07-06.txt
-snapshot/.hermes/security-audit-lite/failsafe-alert-2026-07-02.sent
-snapshot/.hermes/security-audit-lite/failsafe-alert-2026-07-05.sent
-snapshot/.hermes/security-audit-lite/index.html
-snapshot/.hermes/security-audit-lite/report-2026-06-30.md
-snapshot/.hermes/security-audit-lite/report-2026-07-01.md
-snapshot/.hermes/security-audit-lite/report-2026-07-03.md
-snapshot/.hermes/security-audit-lite/report-2026-07-04.md
-snapshot/.hermes/security-audit-lite/report-2026-07-06.md
-snapshot/.hermes/security-audit-lite/report-postfix-2026-06-30.md
-snapshot/.hermes/security-audit-lite/status.json
 snapshot/.hermes/skills/.archive/dedup-20260703/WHY.txt
 snapshot/.hermes/skills/.archive/dedup-20260703/deepresearch-orchestration/SKILL.md
 snapshot/.hermes/skills/.archive/dedup-20260703/deepresearch-orchestration/references/hermes-deepresearch-mvp.md
@@ -736,7 +712,6 @@ snapshot/repos/.agentsmon-src/agentsmon/updater.py
 snapshot/repos/.agentsmon-src/agentsmon/wizard.py
 snapshot/repos/.agentsmon-src/install.sh
 snapshot/repos/.agentsmon-src/pyproject.toml
-snapshot/repos/humanagentwiki/.env.example
 snapshot/repos/humanagentwiki/.gitignore
 snapshot/repos/humanagentwiki/LICENSE
 snapshot/repos/humanagentwiki/README.md
@@ -790,7 +765,6 @@ snapshot/repos/humanagentwiki/static/3d-force-graph.min.js
 snapshot/repos/humanagentwiki/static/index.html
 snapshot/repos/humanagentwiki/static/marked.min.js
 snapshot/repos/humanagentwiki/tests/test_core.py
-snapshot/repos/humanagentwiki/web-8808.log
 snapshot/repos/humanagentwiki/web.py
 system/crontab.txt
 system/file-list.txt
