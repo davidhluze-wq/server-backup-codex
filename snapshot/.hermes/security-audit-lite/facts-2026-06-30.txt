@@ -1,0 +1,295 @@
+# Security audit facts
+generated_at=2026-06-30T22:06:24+00:00
+host=vm12890.lumadock.com
+user=uid=1000(david_master) gid=1000(david_master) groups=1000(david_master),27(sudo)
+kernel=Linux vm12890 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+base_dir=/home/david_master/.hermes/security-audit-lite
+facts_file=/home/david_master/.hermes/security-audit-lite/facts-2026-06-30.txt
+
+Accepted risks / DO NOT FLAG AS FIXES:
+- Agent bypass/dangerous/skip-permissions modes may be intentionally enabled for autonomous operation; do not disable or propose disabling.
+- SSH password authentication may be intentionally accepted; do not flag passwordauthentication=yes as a finding. For SSH only assess root login and brute-force protection.
+
+===== OS release =====
+$ bash -lc cat /etc/os-release 2>/dev/null || true
+PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.5 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+
+===== Uptime =====
+$ uptime
+ 22:06:24 up 2 min,  4 users,  load average: 0.55, 0.26, 0.10
+
+===== Reboot required =====
+$ bash -lc test -f /var/run/reboot-required && { echo yes; cat /var/run/reboot-required.pkgs 2>/dev/null; } || echo no
+no
+
+===== APT upgradable packages =====
+$ apt list --upgradable 2>/dev/null | sed -n "1,120p"
+Listing...
+
+===== APT simulated upgrade summary =====
+$ apt-get -s upgrade 2>/dev/null | sed -n "1,180p"
+NOTE: This is only a simulation!
+      apt-get needs root privileges for real execution.
+      Keep also in mind that locking is deactivated,
+      so don't depend on the relevance to the real current situation!
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+===== Listening ports =====
+$ ss -tulnp 2>/dev/null || netstat -tulnp 2>/dev/null || true
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                           
+udp   UNCONN 0      0      127.0.0.53%lo:53         0.0.0.0:*                                     
+tcp   LISTEN 0      128        127.0.0.1:8642       0.0.0.0:*    users:(("hermes",pid=1026,fd=21))
+tcp   LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*                                     
+tcp   LISTEN 0      128          0.0.0.0:22         0.0.0.0:*                                     
+tcp   LISTEN 0      4096       127.0.0.1:36067      0.0.0.0:*    users:(("agy",pid=1010,fd=12))   
+tcp   LISTEN 0      5            0.0.0.0:8765       0.0.0.0:*    users:(("python3",pid=759,fd=3)) 
+tcp   LISTEN 0      4096       127.0.0.1:40593      0.0.0.0:*    users:(("agy",pid=1010,fd=11))   
+tcp   LISTEN 0      128             [::]:22            [::]:*                                     
+
+===== Established connections sample =====
+$ ss -tunp state established 2>/dev/null | sed -n "1,120p" || true
+Netid Recv-Q Send-Q Local Address:Port     Peer Address:Port Process                           
+tcp   0      0        38.19.198.4:36002    104.18.32.47:443   users:(("codex",pid=918,fd=33))  
+tcp   0      0        38.19.198.4:54914  216.239.38.223:443   users:(("agy",pid=1010,fd=31))   
+tcp   0      0        38.19.198.4:48422 149.154.166.110:443   users:(("python3",pid=1032,fd=3))
+tcp   0      0        38.19.198.4:41052  216.239.34.223:443   users:(("agy",pid=1010,fd=19))   
+tcp   0      0        38.19.198.4:37426    34.54.84.110:443   users:(("agy",pid=1010,fd=14))   
+tcp   0      0        38.19.198.4:44726  216.239.32.223:443   users:(("agy",pid=1010,fd=32))   
+tcp   0      0        38.19.198.4:39650 149.154.166.110:443   users:(("hermes",pid=1026,fd=16))
+tcp   0      0        38.19.198.4:22      217.26.221.27:57412                                  
+tcp   0      0        38.19.198.4:48444   160.79.104.10:443   users:(("claude",pid=962,fd=19)) 
+tcp   0      0        38.19.198.4:60082 149.154.166.110:443   users:(("hermes",pid=1026,fd=17))
+tcp   0      0        38.19.198.4:37496  142.251.110.95:443   users:(("agy",pid=1010,fd=30))   
+tcp   0      0        38.19.198.4:44236    104.18.32.47:443   users:(("codex",pid=918,fd=35))  
+tcp   0      0        38.19.198.4:41054  216.239.34.223:443   users:(("agy",pid=1010,fd=17))   
+
+===== Firewall status =====
+$ if command -v ufw >/dev/null; then ufw status verbose; fi; if command -v nft >/dev/null; then nft list ruleset 2>/dev/null | sed -n "1,160p"; fi; iptables -S 2>/dev/null | sed -n "1,160p" || true
+ERROR: You need to be root to run this script
+
+===== SSH effective config =====
+$ sshd -T 2>/dev/null | egrep "^(permitrootlogin|passwordauthentication|pubkeyauthentication|port|listenaddress|maxauthtries)" || true
+
+===== SSH failed/invalid attempts last 24h =====
+$ (journalctl -u ssh -u sshd --since "24 hours ago" 2>/dev/null || true) | grep -Eci "failed|invalid|authentication failure|disconnecting authenticating" || true
+0
+
+===== Recent SSH/auth log lines =====
+$ (journalctl -u ssh -u sshd --since "24 hours ago" 2>/dev/null || grep -hEi "failed|invalid|authentication failure" /var/log/auth.log* 2>/dev/null || true) | tail -80
+-- No entries --
+
+===== fail2ban status =====
+$ systemctl is-active fail2ban 2>/dev/null; fail2ban-client status 2>/dev/null || true
+active
+
+===== sudo group =====
+$ getent group sudo || true
+sudo:x:27:david_master
+
+===== human users UID>=1000 =====
+$ awk -F: '$3 >= 1000 && $3 < 65534 {print}' /etc/passwd || true
+david_master:x:1000:1000:,,,:/home/david_master:/bin/bash
+
+===== last logins =====
+$ last -10 2>/dev/null || true
+root     pts/3        217.26.221.27    Tue Jun 30 22:04   still logged in
+david_ma pts/2        tmux(855).%2     Tue Jun 30 22:04   still logged in
+david_ma pts/1        tmux(855).%1     Tue Jun 30 22:04   still logged in
+david_ma pts/0        tmux(855).%0     Tue Jun 30 22:04   still logged in
+reboot   system boot  5.15.0-185-gener Tue Jun 30 22:04   still running
+david_ma pts/3        tmux(19282).%2   Tue Jun 30 21:30 - 22:03  (00:33)
+david_ma pts/2        tmux(19282).%1   Tue Jun 30 21:21 - 22:03  (00:42)
+david_ma pts/1        tmux(19282).%0   Tue Jun 30 20:30 - 22:03  (01:33)
+david_ma pts/1        tmux(19063).%0   Tue Jun 30 20:28 - 20:29  (00:00)
+root     pts/0        217.26.221.27    Tue Jun 30 20:15 - down   (01:48)
+
+wtmp begins Tue Jun 30 07:43:28 2026
+
+===== current crontab =====
+$ crontab -l 2>/dev/null || true
+@reboot /home/david_master/.local/state/agentsmon/agentsmon-launch.sh
+* * * * * /home/david_master/.local/state/agentsmon/agentsmon-launch.sh
+
+===== system cron entries =====
+$ ls -la /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.weekly /etc/crontab 2>/dev/null; sed -n "1,160p" /etc/crontab 2>/dev/null || true
+-rw-r--r-- 1 root root 1136 Mar 23  2022 /etc/crontab
+
+/etc/cron.d:
+total 16
+drwxr-xr-x   2 root root 4096 Mar 27  2025 .
+drwxr-xr-x 102 root root 4096 Jun 30 22:02 ..
+-rw-r--r--   1 root root  102 Mar 23  2022 .placeholder
+-rw-r--r--   1 root root  201 Jan  8  2022 e2scrub_all
+
+/etc/cron.daily:
+total 32
+drwxr-xr-x   2 root root 4096 Jun 30 22:02 .
+drwxr-xr-x 102 root root 4096 Jun 30 22:02 ..
+-rw-r--r--   1 root root  102 Mar 23  2022 .placeholder
+-rwxr-xr-x   1 root root  376 Jul 24  2023 apport
+-rwxr-xr-x   1 root root 1478 Apr  8  2022 apt-compat
+-rwxr-xr-x   1 root root  123 Dec  5  2021 dpkg
+-rwxr-xr-x   1 root root  377 Jan 24  2022 logrotate
+-rwxr-xr-x   1 root root 1330 Mar 17  2022 man-db
+
+/etc/cron.hourly:
+total 12
+drwxr-xr-x   2 root root 4096 Mar 27  2025 .
+drwxr-xr-x 102 root root 4096 Jun 30 22:02 ..
+-rw-r--r--   1 root root  102 Mar 23  2022 .placeholder
+
+/etc/cron.weekly:
+total 16
+drwxr-xr-x   2 root root 4096 Mar 27  2025 .
+drwxr-xr-x 102 root root 4096 Jun 30 22:02 ..
+-rw-r--r--   1 root root  102 Mar 23  2022 .placeholder
+-rwxr-xr-x   1 root root 1020 Mar 17  2022 man-db
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+# You can also override PATH, but by default, newer versions inherit it from the environment
+#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+===== running services =====
+$ systemctl list-units --type=service --state=running --no-pager 2>/dev/null | sed -n "1,180p" || true
+  UNIT                        LOAD   ACTIVE SUB     DESCRIPTION
+  cron.service                loaded active running Regular background program processing daemon
+  dbus.service                loaded active running D-Bus System Message Bus
+  fail2ban.service            loaded active running Fail2Ban Service
+  getty@tty1.service          loaded active running Getty on tty1
+  irqbalance.service          loaded active running irqbalance daemon
+  multipathd.service          loaded active running Device-Mapper Multipath Device Controller
+  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd
+  qemu-guest-agent.service    loaded active running QEMU Guest Agent
+  rsyslog.service             loaded active running System Logging Service
+  snapd.service               loaded active running Snap Daemon
+  ssh.service                 loaded active running OpenBSD Secure Shell server
+  systemd-journald.service    loaded active running Journal Service
+  systemd-logind.service      loaded active running User Login Management
+  systemd-networkd.service    loaded active running Network Configuration
+  systemd-resolved.service    loaded active running Network Name Resolution
+  systemd-timesyncd.service   loaded active running Network Time Synchronization
+  systemd-udevd.service       loaded active running Rule-based Manager for Device Events and Files
+  unattended-upgrades.service loaded active running Unattended Upgrades Shutdown
+  user@0.service              loaded active running User Manager for UID 0
+  user@1000.service           loaded active running User Manager for UID 1000
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+20 loaded units listed.
+
+===== top cpu/mem processes =====
+$ ps aux --sort=-%cpu | head -25; echo; ps aux --sort=-%mem | head -25
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+david_m+    1026  8.8  5.5 868672 221196 ?       Sl   22:04   0:10 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes gateway run --replace
+david_m+     918  2.8  3.5 422364 140952 pts/0   Sl+  22:04   0:03 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
+david_m+    1010  2.6  6.3 3772584 252944 pts/2  Sl+  22:04   0:03 agy --continue --dangerously-skip-permissions
+david_m+     962  2.0  4.1 73281724 164964 pts/1 Sl+  22:04   0:02 claude --continue --dangerously-skip-permissions
+root           1  1.4  0.2 166280 11776 ?        Ss   22:04   0:02 /sbin/init
+david_m+    1474  0.5  0.0   7896  3616 ?        S    22:06   0:00 bash /home/david_master/.hermes/scripts/security-audit-lite/audit_collect.sh
+root           9  0.4  0.0      0     0 ?        I    22:04   0:00 [kworker/u6:0-writeback]
+root         717  0.4  0.9 1400540 39196 ?       Ssl  22:04   0:00 /usr/lib/snapd/snapd
+david_m+    1032  0.3  0.5 253264 23896 ?        Sl   22:04   0:00 /usr/bin/python3 -m agent2telegram run
+root         708  0.2  0.5 400420 22620 ?        Ssl  22:04   0:00 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+root          14  0.1  0.0      0     0 ?        I    22:04   0:00 [rcu_sched]
+root          21  0.1  0.0      0     0 ?        S    22:04   0:00 [migration/1]
+root          27  0.1  0.0      0     0 ?        S    22:04   0:00 [migration/2]
+root         396  0.1  0.3  39808 15640 ?        S<s  22:04   0:00 /lib/systemd/systemd-journald
+root         432  0.1  0.1  23052  6424 ?        Ss   22:04   0:00 /lib/systemd/systemd-udevd
+david_m+     759  0.1  0.5 178580 23692 ?        Sl   22:04   0:00 /usr/bin/python3 -m agentsmon dashboard
+david_m+     781  0.1  0.2  17332  9928 ?        Ss   22:04   0:00 /lib/systemd/systemd --user
+root        1234  0.1  0.2  17080  9820 ?        Ss   22:04   0:00 /lib/systemd/systemd --user
+root           2  0.0  0.0      0     0 ?        S    22:04   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   22:04   0:00 [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   22:04   0:00 [rcu_par_gp]
+root           5  0.0  0.0      0     0 ?        I<   22:04   0:00 [slub_flushwq]
+root           6  0.0  0.0      0     0 ?        I<   22:04   0:00 [netns]
+root           7  0.0  0.0      0     0 ?        I    22:04   0:00 [kworker/0:0-events]
+
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+david_m+    1010  2.6  6.3 3772584 252944 pts/2  Sl+  22:04   0:03 agy --continue --dangerously-skip-permissions
+david_m+    1026  8.8  5.5 868672 221196 ?       Sl   22:04   0:10 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes gateway run --replace
+david_m+     962  2.0  4.1 73281724 164964 pts/1 Sl+  22:04   0:02 claude --continue --dangerously-skip-permissions
+david_m+     918  2.8  3.5 422296 141204 pts/0   Sl+  22:04   0:03 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
+root         717  0.4  0.9 1400540 39196 ?       Ssl  22:04   0:00 /usr/lib/snapd/snapd
+root         430  0.0  0.6 289348 27096 ?        SLsl 22:04   0:00 /sbin/multipathd -d -s
+david_m+    1032  0.3  0.5 253264 23896 ?        Sl   22:04   0:00 /usr/bin/python3 -m agent2telegram run
+david_m+     759  0.1  0.5 178580 23692 ?        Sl   22:04   0:00 /usr/bin/python3 -m agentsmon dashboard
+root         708  0.2  0.5 400420 22620 ?        Ssl  22:04   0:00 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+root         777  0.0  0.5 110156 21352 ?        Ssl  22:04   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+root         711  0.0  0.4  33080 18988 ?        Ss   22:04   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+root         396  0.1  0.3  39808 15640 ?        S<s  22:04   0:00 /lib/systemd/systemd-journald
+systemd+     665  0.0  0.3  25680 12792 ?        Ss   22:04   0:00 /lib/systemd/systemd-resolved
+root           1  1.4  0.2 166280 11776 ?        Ss   22:04   0:02 /sbin/init
+root        1008  0.0  0.2  17152 11272 ?        Ss   22:04   0:00 sshd: root@pts/3
+david_m+     781  0.1  0.2  17332  9928 ?        Ss   22:04   0:00 /lib/systemd/systemd --user
+root        1234  0.1  0.2  17080  9820 ?        Ss   22:04   0:00 /lib/systemd/systemd --user
+root         758  0.0  0.2  15440  9244 ?        Ss   22:04   0:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+systemd+     663  0.0  0.2  16132  8208 ?        Ss   22:04   0:00 /lib/systemd/systemd-networkd
+root         720  0.0  0.1  15344  7828 ?        Ss   22:04   0:00 /lib/systemd/systemd-logind
+systemd+     563  0.0  0.1  89364  6512 ?        Ssl  22:04   0:00 /lib/systemd/systemd-timesyncd
+root         432  0.1  0.1  23052  6424 ?        Ss   22:04   0:00 /lib/systemd/systemd-udevd
+syslog       714  0.0  0.1 222404  5468 ?        Ssl  22:04   0:00 /usr/sbin/rsyslogd -n -iNONE
+david_m+    1354  0.0  0.1   9096  5260 pts/3    S+   22:05   0:00 -bash
+
+===== disk usage =====
+$ df -h /; df -ih /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        49G  7.7G   41G  16% /
+Filesystem     Inodes IUsed IFree IUse% Mounted on
+/dev/sda1        6.2M  287K  5.9M    5% /
+
+===== backup hints =====
+$ systemctl list-units --type=service --all --no-pager 2>/dev/null | egrep -i "backup|restic|borg|duplicity|rsync|rclone" || true; ls -ld /backup /backups /var/backups "$HOME/backups" "$HOME/.restic" 2>/dev/null || true
+  dpkg-db-backup.service                         loaded    inactive dead    Daily dpkg database backup service
+drwxr-xr-x 2 root root 4096 Jun 30 22:01 /var/backups
+
+===== exposed service package versions =====
+$ printf "openssh-server\nnginx\napache2\npostgresql\nmysql-server\nmariadb-server\nredis-server\ndocker.io\ncontainerd\nnodejs\npython3\n" | while read p; do dpkg-query -W -f="${Package} ${Version}\n" "$p" 2>/dev/null; done
+ 
+ 
+ 
+ 
+
+===== Hermes/Codex/Claude process flags sample =====
+$ ps aux | egrep -i "hermes|codex|claude|opencode|antigravity|openclaw" | grep -v egrep | sed -n "1,80p" || true
+david_m+     918  2.8  3.5 422268 141196 pts/0   Sl+  22:04   0:03 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
+david_m+     962  2.0  4.1 73281724 164960 pts/1 Sl+  22:04   0:02 claude --continue --dangerously-skip-permissions
+david_m+    1026  8.8  5.5 868672 221196 ?       Sl   22:04   0:10 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes gateway run --replace
+david_m+    1472  0.0  0.0   7900  3372 ?        Ss   22:06   0:00 /usr/bin/bash -c source /tmp/hermes-snap-9a59d3e626c2.sh >/dev/null 2>&1 || true builtin cd -- /home/david_master || exit 126 eval '~/.hermes/scripts/security-audit-lite/audit_collect.sh >/dev/null python3 - <<'\''PY'\'' from pathlib import Path from datetime import datetime, timezone import json base=Path.home()/'\''.hermes/security-audit-lite'\'' now=datetime.now(timezone.utc).strftime('\''%Y-%m-%d %H:%M UTC'\'') status={   '\''updated'\'': now,   '\''overall'\'': '\''yellow'\'',   '\''areas'\'': [     {'\''name'\'':'\''Aktualizace'\'','\''status'\'':'\''green'\'','\''note'\'':'\''0 balíků k aktualizaci, restart už není potřeba'\''},     {'\''name'\'':'\''Kernel/restart'\'','\''status'\'':'\''green'\'','\''note'\'':'\''server je po restartu na kernelu 5.15.0-185'\''},     {'\''name'\'':'\''Fail2ban'\'','\''status'\'':'\''green'\'','\''note'\'':'\''služba je aktivní'\''},     {'\''name'\'':'\''Port 8765'\'','\''status'\'':'\''green'\'','\''note'\'':'\''záměrně veřejný dashboard, chráněný heslem (HTTP 401 bez loginu)'\''},     {'\''name'\'':'\''SSH root'\'','\''status'\'':'\''yellow'\'','\''note'\'':'\''root je aktuálně přihlášený z veřejné IP; ověřit, že je to záměrné'\''},     {'\''name'\'':'\''Firewall'\'','\''status'\'':'\''yellow'\'','\''note'\'':'\''bez sudo hesla nejde ověřit stav UFW/pravidel'\''},     {'\''name'\'':'\''SSH'\'','\''status'\'':'\''green'\'','\''note'\'':'\''veřejné SSH je očekávané; pokusy o vloupání zkontroluje noční audit'\''},     {'\''name'\'':'\''Disk'\'','\''status'\'':'\''green'\'','\''note'\'':'\''stav disku byl v předchozím auditu v pořádku'\''}   ] } (base/'\''status.json'\'').write_text(json.dumps(status, ensure_ascii=False, indent=2)+'\''\n'\'') report=f'\'''\'''\''# Security audit lite – kontrola po opravách  - Report vytvořen: `{now}` - Audit byl read-only: nic dalšího jsem neměnil.  ## Shrnutí pro Telegram 🟡 – Root je stále aktuálně přihlášený přes SSH z veřejné IP; ověř, že je to záměrné. 🟡 – Firewall/UFW se bez sudo hesla nepodařilo ověřit. 🟢 – Aktualizace jsou hotové: `0` balíků k aktualizaci. 🟢 – Restart proběhl a server běží na kernelu `5.15.0-185`. 🟢 – `fail2ban` služba je aktivní. 🟢 – Port `8765` je záměrně veřejný dashboard a bez přihlášení vrací `401`.  ❓ Mám opravit vše, co půjde? (napiš ano)  ## Detaily ověření  - Boot time: `2026-06-30 22:04:07`. - Uptime při kontrole: cca 1 minuta po restartu. - `apt list --upgradable`: `0`. - `apt-get -s upgrade`: `0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded`. - `/var/run/reboot-required`: neexistuje, restart už není požadován. - `systemctl is-active fail2ban`: `active`. - Port `8765`: naslouchá na `0.0.0.0:8765`, což je dle uživatele záměrné; lokální HTTP probe vrací `401`, tedy vyžaduje přihlášení. - SSH port `22`: veřejně dostupný, očekávané. - Root relace: `root pts/3 217.26.221.27 Tue Jun 30 22:04 still logged in`. - Firewall/UFW: nelze ověřit bez sudo hesla (`sudo: a password is required`).  ## Doporučené další ruční ověření  V terminálu můžeš spustit:  ```bash sudo ufw status verbose sudo fail2ban-client status sshd sudo sshd -T | grep permitrootlogin ```  Pokud chceš zakázat přímé root SSH přihlášení, použij:  ```bash sudo tee /etc/ssh/sshd_config.d/99-disable-root-login.conf >/dev/null <<'\''EOF'\'' PermitRootLogin no EOF sudo sshd -t sudo systemctl reload ssh sudo sshd -T | grep permitrootlogin ``` '\'''\'''\'' (base/'\''report-postfix-2026-06-30.md'\'').write_text(report) (base/'\''report-latest.md'\'').write_text(report) print(base/'\''report-postfix-2026-06-30.md'\'') PY python3 -m json.tool ~/.hermes/security-audit-lite/status.json >/dev/null ~/.hermes/scripts/security-audit-lite/audit_digest.py' __hermes_ec=$? { export -p > /tmp/hermes-snap-9a59d3e626c2.sh.tmp.$BASHPID && mv -f /tmp/hermes-snap-9a59d3e626c2.sh.tmp.$BASHPID /tmp/hermes-snap-9a59d3e626c2.sh; } 2>/dev/null || rm -f /tmp/hermes-snap-9a59d3e626c2.sh.tmp.$BASHPID 2>/dev/null || true pwd -P > /tmp/hermes-cwd-9a59d3e626c2.txt 2>/dev/null || true printf '\n__HERMES_CWD_9a59d3e626c2__%s__HERMES_CWD_9a59d3e626c2__\n' "$(pwd -P)" exit $__hermes_ec
+david_m+    1474  0.5  0.0   7896  3620 ?        S    22:06   0:00 bash /home/david_master/.hermes/scripts/security-audit-lite/audit_collect.sh
+david_m+    1652  0.0  0.0   7040  2212 ?        S    22:06   0:00 grep -E -i hermes|codex|claude|opencode|antigravity|openclaw
