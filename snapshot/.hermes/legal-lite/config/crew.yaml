@@ -1,0 +1,23 @@
+name: legal-lite
+description: JEN sablony + obecna compliance + NDA z neutralnich vstupu. Zadna duverna data.
+host: vps
+inherits:
+  - ~/Hermes/AGENTS.md
+  - ~/Hermes/policies/model-routing.md
+  - ~/Hermes/policies/human-in-the-loop.md
+
+hard_rule: >
+  Nezpracovavat duverna/klientska/firemni data. Ta patri na Mac + lokalni model.
+  Vystup = navrh, ne pravni rada; vyzaduje lidskou revizi.
+
+# Tierovany routing
+roles:
+  clause_analyzer:    { profile: deepresearch-claude-opus, prompt: prompts/clause_analyzer.md }    # usudek
+  risk_assessor:      { profile: deepresearch-claude-opus, prompt: prompts/risk_assessor.md }      # usudek
+  compliance_checker: { profile: worker-sonnet,            prompt: prompts/compliance_checker.md } # checklist
+  nda_drafter:        { profile: worker-gpt-mini,          prompt: prompts/nda_drafter.md }         # drafting
+  comparator:         { profile: worker-gpt-mini,          prompt: prompts/comparator.md }          # diff
+  final_review:       { profile: deepresearch-claude-opus, prompt: prompts/final_review.md }        # tester
+
+knowledge_base: humanagentwiki MCP (vlastni pravni poznamky/sablony) — mene halucinaci
+artifacts_dir: runs/

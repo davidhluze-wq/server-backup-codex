@@ -1,0 +1,20 @@
+{
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 -m agent2telegram.stop_hook",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark"
+}

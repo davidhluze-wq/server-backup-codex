@@ -1,0 +1,21 @@
+{
+  "agent": "codex",
+  "token": "<REDACTED>",
+  "allowed_user_ids": [
+    8629730938
+  ],
+  "workdir": "",
+  "command": null,
+  "continue_command": null,
+  "agent_timeout": 600,
+  "poll_timeout": 50,
+  "elevenlabs_api_key": "<REDACTED>",
+  "mode": "attach",
+  "tmux_session": "David_Codex",
+  "signal_file": "/home/david_master/.local/state/agent2telegram/David_Codex/answer.txt",
+  "transcript_path": "/home/david_master/.codex/sessions/2026/07/01/rollout-2026-07-01T21-22-00-019f1f8f-6a65-7c83-8b6d-41afec8ab8b1.jsonl",
+  "origin_prefix": "[TG] ",
+  "claude_session_id": "",
+  "progress_marker": "[TG]",
+  "bot_username": "David_codex2_bot"
+}

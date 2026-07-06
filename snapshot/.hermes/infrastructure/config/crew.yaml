@@ -1,0 +1,39 @@
+name: infrastructure
+description: Sprava VPS vm12890 - deploy, Postgres, dashboardy, monitoring. 24/7.
+host: vps
+inherits:
+  - ~/Hermes/AGENTS.md
+  - ~/Hermes/policies/model-routing.md
+  - ~/Hermes/policies/token-budget.md
+  - ~/Hermes/policies/self-repair.md
+  - ~/Hermes/policies/human-in-the-loop.md
+
+# SKUTECNE Hermes profily (ne nazvy modelu)
+roles:
+  deploy:
+    profile: deepresearch-claude-opus
+    prompt: prompts/deploy.md
+    toolsets: file,web
+  db_steward:
+    profile: deepresearch-gpt55
+    prompt: prompts/db_steward.md
+    toolsets: file,web
+  dashboard_curator:
+    profile: deepresearch-claude-opus
+    prompt: prompts/dashboard_curator.md
+    toolsets: file,web
+
+cron:
+  - name: infra-monitor
+    schedule: "*/5 * * * *"
+    command: scripts/monitor.sh
+    llm: false        # zero-LLM, nestoji tokeny
+
+skills:
+  - devops
+  - github
+
+artifacts_dir: runs/
+notes: >
+  Runner produkuje PLAN/prikazy (ne autonomni vykon) - LLM nema terminal toolset.
+  Nevratne kroky vykona clovek po schvaleni pres Telegram (human-in-the-loop.md).

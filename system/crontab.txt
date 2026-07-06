@@ -1,0 +1,4 @@
+@reboot /home/david_master/.local/state/agentsmon/agentsmon-launch.sh
+* * * * * /home/david_master/.local/state/agentsmon/agentsmon-launch.sh
+*/5 * * * * /home/david_master/.hermes/infrastructure/scripts/monitor.sh
+0 0 * * * /home/david_master/lana-research/scripts/nightly_lana.sh

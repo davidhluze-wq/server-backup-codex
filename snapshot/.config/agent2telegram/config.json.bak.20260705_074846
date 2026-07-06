@@ -1,0 +1,21 @@
+{
+  "agent": "codex",
+  "token": "<REDACTED>",
+  "allowed_user_ids": [
+    8629730938
+  ],
+  "workdir": "",
+  "command": null,
+  "continue_command": null,
+  "agent_timeout": 600,
+  "poll_timeout": 50,
+  "elevenlabs_api_key": "<REDACTED>",
+  "mode": "attach",
+  "tmux_session": "David - Master",
+  "signal_file": "/home/david_master/.local/state/agent2telegram/answer.txt",
+  "transcript_path": "auto",
+  "origin_prefix": "[TG] ",
+  "claude_session_id": "",
+  "progress_marker": "[TG]",
+  "bot_username": "David_Master1991_bot"
+}

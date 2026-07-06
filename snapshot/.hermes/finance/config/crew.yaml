@@ -1,0 +1,21 @@
+name: finance
+description: Financni analyza faze 1 - JEN verejna data + reporty. vm12890.
+host: vps
+inherits:
+  - ~/Hermes/AGENTS.md
+  - ~/Hermes/policies/model-routing.md
+  - ~/Hermes/policies/token-budget.md
+  - ~/Hermes/policies/human-in-the-loop.md
+
+# TIEROVANY routing (levny na rutinu, drahy na usudek/kontrolu)
+roles:
+  analyst:       { profile: deepresearch-claude-opus, prompt: prompts/analyst.md }       # usudek
+  cashflow:      { profile: deepresearch-claude-opus, prompt: prompts/cashflow.md }       # usudek
+  anomaly:       { profile: worker-sonnet,            prompt: prompts/anomaly.md }        # rutinni scan
+  report_writer: { profile: worker-gpt-mini,          prompt: prompts/report_writer.md }  # formatovani
+  final_review:  { profile: deepresearch-claude-opus, prompt: prompts/final_review.md }   # finalni tester
+
+escalation: levny -> levny-druhy-provider -> drahy
+scope: JEN verejna data. Firemni/osobni finance na Macu. Burza = oddeleny projekt (faze 2).
+db: pri potrebe uloziste pouzij novou Postgres DB "finance" (ne humanagentwiki).
+artifacts_dir: runs/

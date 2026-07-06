@@ -1,0 +1,1 @@
+Archived 2026-07-03 by Claude Code during orchestration cleanup: near-duplicates of research/hermes-deepresearch-orchestration and marketing/marketing-website-audit-crew. Restore with mv if needed.

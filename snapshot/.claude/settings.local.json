@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(crontab -l)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "Bash(sqlite3 kanban.db \".tables\")",
+      "Bash(sqlite3 -header -column kanban.db \"SELECT * FROM boards;\")",
+      "Bash(sqlite3 -header -column kanban.db \"SELECT board_id,status,count\\(*\\) FROM tasks GROUP BY board_id,status;\")",
+      "Bash(python3 -)",
+      "WebFetch(domain:hermes-agent.nousresearch.com)",
+      "Bash(grep -rln \"rate_limit\\\\|rate-limit\\\\|429\\\\|Retry-After\\\\|quota\\\\|usage_limit\" agent/codex_runtime.py agent/codex_responses_adapter.py agent/rate_limit_tracker.py agent/nous_rate_guard.py)",
+      "Bash(wc -l agent/rate_limit_tracker.py agent/codex_runtime.py agent/account_usage.py agent/credits_tracker.py agent/usage_pricing.py agent/iteration_budget.py)",
+      "WebFetch(domain:blakecrosley.com)",
+      "WebFetch(domain:addyosmani.com)",
+      "Bash(git config *)",
+      "Bash(grep -nE \"sk-[a-zA-Z0-9]{20}|api[_-]?key\\\\s*[:=]\\\\s*['\\\\\"]?[A-Za-z0-9]{20,}|BEGIN.*PRIVATE KEY\" /home/david_master/.hermes/skills/autonomous-ai-agents/hermes-agent/references/native-mcp.md)",
+      "Bash(git commit -q -m 'Initial snapshot: Hermes config, profiles, skills, cron jobs, orchestration prompts/scripts *)",
+      "Bash(timeout 180 /home/david_master/.hermes/hermes-agent/hermes -p deepresearch-claude-opus chat -Q --max-turns 1 -q \"Reply with exactly: OK\")",
+      "Bash(timeout 240 /home/david_master/.local/bin/hermes -p deepresearch-claude-opus chat -Q --max-turns 1 -q \"Reply with exactly: OK\")"
+    ]
+  }
+}

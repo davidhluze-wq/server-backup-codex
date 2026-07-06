@@ -1,0 +1,505 @@
+{
+  "generated": "2026-07-05",
+  "crews": [
+    {
+      "name": "infrastructure",
+      "host": "vps",
+      "dir": "infrastructure",
+      "doc": "infrastructure/README.md",
+      "description": "Sprava VPS: deploy sluzeb, Postgres, sjednoceni dashboardu, monitoring. 24/7.",
+      "modes": [
+        "deploy",
+        "db",
+        "dashboard",
+        "full"
+      ],
+      "runner": "infrastructure/scripts/run_infra.py",
+      "roles": [
+        {
+          "role": "deploy",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "infrastructure/prompts/deploy.md"
+        },
+        {
+          "role": "db_steward",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "infrastructure/prompts/db_steward.md"
+        },
+        {
+          "role": "dashboard_curator",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "infrastructure/prompts/dashboard_curator.md"
+        },
+        {
+          "role": "infra_monitor",
+          "profile": "zero-LLM",
+          "model": "—(bash)",
+          "tier": "zdarma",
+          "doc": "infrastructure/scripts/monitor.sh"
+        }
+      ]
+    },
+    {
+      "name": "finance",
+      "host": "vps",
+      "dir": "finance",
+      "doc": "finance/README.md",
+      "description": "Financni analyza faze 1 — JEN verejna data + reporty. Firemni finance na Macu.",
+      "modes": [
+        "report",
+        "cashflow",
+        "anomaly",
+        "full"
+      ],
+      "runner": "finance/scripts/run_finance.py",
+      "roles": [
+        {
+          "role": "analyst",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "finance/prompts/analyst.md"
+        },
+        {
+          "role": "cashflow",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "finance/prompts/cashflow.md"
+        },
+        {
+          "role": "anomaly",
+          "profile": "worker-sonnet",
+          "model": "claude-sonnet-5",
+          "tier": "levny",
+          "doc": "finance/prompts/anomaly.md"
+        },
+        {
+          "role": "report_writer",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "finance/prompts/report_writer.md"
+        },
+        {
+          "role": "final_review",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "finance/prompts/final_review.md"
+        }
+      ]
+    },
+    {
+      "name": "legal-lite",
+      "host": "vps",
+      "dir": "legal-lite",
+      "doc": "legal-lite/README.md",
+      "description": "JEN sablony + obecna compliance + NDA z neutralnich vstupu. Zadna duverna data.",
+      "modes": [
+        "review",
+        "compliance",
+        "draft",
+        "compare",
+        "full"
+      ],
+      "runner": "legal-lite/scripts/run_legal.py",
+      "roles": [
+        {
+          "role": "clause_analyzer",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "legal-lite/prompts/clause_analyzer.md"
+        },
+        {
+          "role": "risk_assessor",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "legal-lite/prompts/risk_assessor.md"
+        },
+        {
+          "role": "compliance_checker",
+          "profile": "worker-sonnet",
+          "model": "claude-sonnet-5",
+          "tier": "levny",
+          "doc": "legal-lite/prompts/compliance_checker.md"
+        },
+        {
+          "role": "nda_drafter",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "legal-lite/prompts/nda_drafter.md"
+        },
+        {
+          "role": "comparator",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "legal-lite/prompts/comparator.md"
+        },
+        {
+          "role": "final_review",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "legal-lite/prompts/final_review.md"
+        }
+      ]
+    },
+    {
+      "name": "marketing-audit",
+      "host": "vps",
+      "dir": "marketing-crew",
+      "doc": "marketing-crew/README.md",
+      "description": "Audit webu: SEO, konkurence, messaging, synteza, QA. Vystup report MD/PDF.",
+      "modes": [
+        "(audit runner: --url ...)"
+      ],
+      "runner": "marketing-crew/scripts/run_marketing_audit.py",
+      "roles": [
+        {
+          "role": "website_audit",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/website-auditor.md"
+        },
+        {
+          "role": "seo_content",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "marketing-crew/prompts/seo-content.md"
+        },
+        {
+          "role": "competitor_market",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/competitor-market.md"
+        },
+        {
+          "role": "messaging_conversion",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "marketing-crew/prompts/messaging-conversion.md"
+        },
+        {
+          "role": "strategy_synthesizer",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/strategy-synthesizer.md"
+        },
+        {
+          "role": "quality_review",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/quality-reviewer.md"
+        }
+      ]
+    },
+    {
+      "name": "marketing-ext",
+      "host": "vps",
+      "dir": "marketing-crew",
+      "doc": "marketing-crew/SETUP_REPORT.md",
+      "description": "Rozsireny marketing tym: strategie, kampan, copy, content, reach, social.",
+      "modes": [
+        "strategy",
+        "campaign",
+        "content",
+        "analytics",
+        "social"
+      ],
+      "runner": "marketing-crew/scripts/run_marketing_ext.py",
+      "roles": [
+        {
+          "role": "strategist",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/strategist.md"
+        },
+        {
+          "role": "campaign_planner",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/campaign_planner.md"
+        },
+        {
+          "role": "copywriter",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "marketing-crew/prompts/copywriter.md"
+        },
+        {
+          "role": "content_maker",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "marketing-crew/prompts/content_maker.md"
+        },
+        {
+          "role": "reach_analyst",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "marketing-crew/prompts/reach_analyst.md"
+        },
+        {
+          "role": "social_analyst",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "marketing-crew/prompts/social_analyst.md"
+        }
+      ]
+    },
+    {
+      "name": "deepresearch",
+      "host": "vps",
+      "dir": "deepresearch",
+      "doc": "deepresearch/README.md",
+      "description": "Multi-agentni deep research: 2 researcheri, arbitr, source audit, writer, QA.",
+      "modes": [
+        "--mode auto"
+      ],
+      "runner": "deepresearch/scripts/run_deepresearch.py",
+      "roles": [
+        {
+          "role": "research_a",
+          "profile": "deepresearch-gpt55",
+          "model": "gpt-5.5",
+          "tier": "drahy",
+          "doc": "deepresearch/prompts"
+        },
+        {
+          "role": "research_b",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "deepresearch/prompts"
+        },
+        {
+          "role": "arbitration",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "deepresearch/prompts"
+        },
+        {
+          "role": "source_audit",
+          "profile": "worker-sonnet",
+          "model": "claude-sonnet-5",
+          "tier": "levny",
+          "doc": "deepresearch/prompts"
+        },
+        {
+          "role": "final_report",
+          "profile": "deepresearch-gpt55",
+          "model": "gpt-5.5",
+          "tier": "drahy",
+          "doc": "deepresearch/prompts"
+        },
+        {
+          "role": "quality_review",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "deepresearch/prompts"
+        }
+      ]
+    },
+    {
+      "name": "news-agent",
+      "host": "vps",
+      "dir": "news-agent",
+      "doc": "news-agent",
+      "description": "AI zpravodaj: breaking (30 min) + digest (2x den) + r_anni radar. Cron-driven.",
+      "modes": [
+        "cron: breaking / digest / radar"
+      ],
+      "runner": "scripts/news_monitor.py",
+      "roles": [
+        {
+          "role": "news_summarize",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "scripts/news_monitor.py"
+        },
+        {
+          "role": "radar",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "scripts/ai_auto_radar.py"
+        }
+      ]
+    },
+    {
+      "name": "security-audit-lite",
+      "host": "vps",
+      "dir": "security-audit-lite",
+      "doc": "security-audit-lite/README.md",
+      "description": "Bezpečnostní arm hermes-architekta: denní read-only audit serveru + ranní semafor + CVE/failsafe. Report konzumuje hermes-architect ve své 3denní revizi.",
+      "modes": [
+        "cron: 3:00 / 7:30 / 7:45"
+      ],
+      "runner": "security-audit-lite/audit_collect.sh",
+      "roles": [
+        {
+          "role": "collect+digest",
+          "profile": "zero-LLM",
+          "model": "—(bash)",
+          "tier": "zdarma",
+          "doc": "security-audit-lite/README.md"
+        }
+      ],
+      "part_of": "hermes-architect"
+    },
+    {
+      "name": "lana-trading",
+      "host": "vps",
+      "dir": "lana-trading",
+      "doc": "lana-trading/README.md",
+      "description": "Trading crew (fáze 4/5): analytici → risk → exekuce → reviewer. Živě v Lana → záložka 📈 Trading. Offline dry-run bez tokenů; demo od 2026-07-07.",
+      "modes": [
+        "demo",
+        "paper",
+        "live"
+      ],
+      "runner": "~/lana-research/scripts/trading_crew.py",
+      "roles": [
+        {
+          "role": "strategist / portfolio lead",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "lana-trading/prompts/strategist.md"
+        },
+        {
+          "role": "research (fundamental)",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "lana-trading/prompts/research.md"
+        },
+        {
+          "role": "quant / kalibrace",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "lana-trading/prompts/quant.md"
+        },
+        {
+          "role": "sentiment / news",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "lana-trading/prompts/sentiment.md"
+        },
+        {
+          "role": "risk manager",
+          "profile": "worker-sonnet",
+          "model": "sonnet",
+          "tier": "levny",
+          "doc": "lana-trading/prompts/risk.md"
+        },
+        {
+          "role": "execution",
+          "profile": "deterministicky",
+          "model": "skript",
+          "tier": "skript",
+          "doc": "lana-trading/prompts/execution.md"
+        },
+        {
+          "role": "reviewer / judge",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "lana-trading/prompts/reviewer.md"
+        }
+      ]
+    },
+    {
+      "name": "hermes-architect",
+      "host": "vps",
+      "dir": "hermes-architect",
+      "doc": "hermes-architect/README.md",
+      "description": "Revizní/optimalizační meta-crew (propose-only). À 3 dny projde nastavení+logy všech crew a pošle Davidovi návrhy na Telegram. Bezpečnost deleguje na security-audit-lite (denní audit). Naparováno na David_Hermes.",
+      "modes": [
+        "review"
+      ],
+      "runner": "~/.hermes/scripts/architect_review.sh",
+      "roles": [
+        {
+          "role": "security → deleguje na security-audit-lite",
+          "profile": "security-audit-lite",
+          "model": "delegace",
+          "tier": "—",
+          "doc": "security-audit-lite/report-latest.md"
+        },
+        {
+          "role": "reliability-analyst",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "hermes-architect/prompts/reliability-analyst.md"
+        },
+        {
+          "role": "runtime-optimizer",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "hermes-architect/prompts/runtime-optimizer.md"
+        },
+        {
+          "role": "token-economist",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "hermes-architect/prompts/token-economist.md"
+        },
+        {
+          "role": "quality-editor",
+          "profile": "worker-sonnet",
+          "model": "sonnet",
+          "tier": "levny",
+          "doc": "hermes-architect/prompts/quality-editor.md"
+        },
+        {
+          "role": "trend-scout",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "hermes-architect/prompts/trend-scout.md"
+        }
+      ]
+    }
+  ],
+  "tiers": {
+    "levny": [
+      "worker-gpt-mini (gpt-5.4-mini)",
+      "worker-sonnet (claude-sonnet-5)"
+    ],
+    "drahy": [
+      "deepresearch-gpt55 (gpt-5.5)",
+      "deepresearch-claude-opus (opus)"
+    ]
+  }
+}

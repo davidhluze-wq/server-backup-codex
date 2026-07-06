@@ -1,0 +1,12 @@
+## /home/david_master/.agent2telegram-src
+origin	https://github.com/petrludwig-collab/Agent2Telegram.git (fetch)
+origin	https://github.com/petrludwig-collab/Agent2Telegram.git (push)
+
+## /home/david_master/.agentsmon-src
+origin	https://github.com/petrludwig-collab/AgentsMonitoring.git (fetch)
+origin	https://github.com/petrludwig-collab/AgentsMonitoring.git (push)
+
+## /home/david_master/humanagentwiki
+origin	https://github.com/petrludwig-collab/HumanAgentWiki.git (fetch)
+origin	https://github.com/petrludwig-collab/HumanAgentWiki.git (push)
+

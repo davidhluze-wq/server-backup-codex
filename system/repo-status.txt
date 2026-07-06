@@ -1,0 +1,20 @@
+## /home/david_master/.agent2telegram-src
+## main...origin/main
+
+## /home/david_master/.agentsmon-src
+## main...origin/main
+ M agentsmon/dashboard.py
+?? agentsmon/dashboard.py.bak.20260705_135036
+
+## /home/david_master/humanagentwiki
+## main...origin/main
+ M common.py
+ M schema.sql
+ M server.py
+ M static/index.html
+?? .env.bak.20260705_183150
+?? notes/Authors/
+?? notes/Books/
+?? notes/Guide/
+?? notes/Quotes/
+

@@ -1,0 +1,21 @@
+{
+  "agent": "claude-code",
+  "token": "<REDACTED>",
+  "allowed_user_ids": [
+    8629730938
+  ],
+  "workdir": "",
+  "command": null,
+  "continue_command": null,
+  "agent_timeout": 600,
+  "poll_timeout": 50,
+  "elevenlabs_api_key": "<REDACTED>",
+  "mode": "attach",
+  "tmux_session": "David_Claude",
+  "signal_file": "/home/david_master/.local/state/agent2telegram/david-claude/answer.txt",
+  "transcript_path": "/home/david_master/.claude/projects/-home-david-master/80a3e9f4-4b83-4c4c-9021-742d8b1cd7d5.jsonl",
+  "origin_prefix": "[TG] ",
+  "claude_session_id": "80a3e9f4-4b83-4c4c-9021-742d8b1cd7d5",
+  "progress_marker": "[TG]",
+  "bot_username": "David1991_Claude_bot"
+}

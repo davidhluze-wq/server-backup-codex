@@ -1,0 +1,2 @@
+prefix_rule(pattern=["tmux", "capture-pane"], decision="allow")
+prefix_rule(pattern=["systemctl", "--user"], decision="allow")
