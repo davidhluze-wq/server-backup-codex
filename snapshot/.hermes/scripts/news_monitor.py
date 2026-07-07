@@ -106,6 +106,16 @@ def append_history(preview: str) -> None:
     HISTORY_PATH.write_text("\n".join(lines[-80:]) + "\n", encoding="utf-8")
 
 
+def global_lessons(max_chars: int = 4000) -> str:
+    p = Path.home() / ".hermes" / "LESSONS.md"
+    if not p.exists():
+        return ""
+    txt = p.read_text(encoding="utf-8", errors="replace")
+    if len(txt) <= max_chars:
+        return txt
+    return txt[: max_chars // 2] + f"\n\n[...TRUNCATED {len(txt)-max_chars} CHARS; FULL FILE ON DISK...]\n\n" + txt[-max_chars // 2 :]
+
+
 def strip_html(text: str) -> str:
     return html.unescape(TAG_RE.sub(" ", text))
 
@@ -255,6 +265,9 @@ def breaking_prompt() -> str:
     return f"""Pracuj POUZE s web search nástrojem. NEPOUŽÍVEJ shell, terminal ani souborové nástroje.
 Aktuální čas: {n:%H:%M} Praha, datum: {n:%d.%m.%Y}.
 
+GLOBAL SELF-LEARNING / LESSONS — zohledni tyto serverové lekce a pokud narazíš na novou opakovatelnou chybu, vrať jednu stručnou lekci pro orchestrátor:
+{global_lessons()}
+
 Zkontroluj, zda se za posledních 30 minut stala SKUTEČNÁ breaking news ve světové politice, bezpečnosti nebo ekonomice. Prohledej {TRUSTED_BREAKING}. Nepoužívej {BLOCKED_SOURCES}.
 
 KRITÉRIUM NOVOSTI: neposílej stejný příběh znovu jen s jiným titulkem. Pošli pouze tehdy, když nastal NOVÝ fakt, který významně posouvá situaci (rozhodnutí, útok, rezignace, podpis zákona, kolaps jednání, mimořádný ekonomický šok apod.). Rutinní komentáře, analýzy, follow-up bez nové okolnosti a opakované shrnutí stejné kauzy = NOTHING.
@@ -274,6 +287,10 @@ Používej výhradně HTML tagy (<b>, <a href>), ŽÁDNÝ markdown. Začni pří
 def digest_prompt() -> str:
     n = now_cz()
     return f"""Pracuj POUZE s web search nástrojem. Aktuální čas: {n:%d.%m. %H:%M} Praha.
+
+GLOBAL SELF-LEARNING / LESSONS — zohledni tyto serverové lekce a pokud narazíš na novou opakovatelnou chybu, vrať jednu stručnou lekci pro orchestrátor:
+{global_lessons()}
+
 Prohledej DNEŠNÍ zprávy — POUZE z posledních 8 hodin (starší nevyužívej, pokud nejde o průběžně se vyvíjející top událost).
 Vyber pouze události, kde se stala NOVÁ významná okolnost, která téma posouvá. Neopakuj stejné příběhy/titulky z předchozích digestů jen proto, že je média znovu zmiňují. Vynech rutinní komentáře, analýzy, spekulace, sport, celebrity, lifestyle.
 

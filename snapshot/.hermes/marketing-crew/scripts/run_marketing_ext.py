@@ -67,6 +67,16 @@ FINAL_QUALITY = (
 )
 
 
+def read_global_lessons(max_chars: int = 5000) -> str:
+    p = Path.home() / ".hermes" / "LESSONS.md"
+    if not p.exists():
+        return ""
+    txt = p.read_text(encoding="utf-8", errors="replace")
+    if len(txt) <= max_chars:
+        return txt
+    return txt[: max_chars // 2] + f"\n\n[...TRUNCATED {len(txt)-max_chars} CHARS; FULL FILE ON DISK...]\n\n" + txt[-max_chars // 2 :]
+
+
 def hermes_cmd(profile: str, role: str, prompt: str, toolsets: str) -> list[str]:
     return ["hermes", "-p", profile, "chat", "-Q", "--source", f"marketing-ext-{role}",
             "--max-turns", "10", "-t", toolsets, "-q", prompt]
@@ -113,7 +123,8 @@ def build_prompt(role: str, task: str, prior: dict, compression: str) -> str:
         ctx = "\n\n# Kontext od predchozich roli\n" + "\n\n".join(
             f"## {r}\n{(t or '')[:6000]}" for r, t in prior.items())
     contract = FINAL_QUALITY if is_final else (CAVEMAN_INTERNAL if compression == "caveman" else "")
-    return base + contract + ctx
+    lessons = "\n\n# Global server self-learning / Lessons\n" + read_global_lessons()
+    return base + lessons + contract + ctx
 
 
 def telegram(msg: str) -> None:

@@ -83,10 +83,20 @@ def read_limited(path: Path, max_chars: int = 18000) -> str:
     txt = path.read_text(encoding="utf-8")
     if len(txt) <= max_chars:
         return txt
-    head = txt[: max_chars // 2]
-    tail = txt[-max_chars // 2 :]
-    return head + f"\n\n[...TRUNCATED {len(txt) - max_chars} CHARS FOR ORCHESTRATION PROMPT; FULL FILE IS ON DISK...]\n\n" + tail
+    head = max_chars // 2
+    tail = max_chars - head
+    omitted = len(txt) - max_chars
+    return txt[:head] + f"\n\n[...TRUNCATED {omitted} CHARS FOR ORCHESTRATION PROMPT; FULL FILE IS ON DISK...]\n\n" + txt[-tail:]
 
+
+def read_global_lessons(max_chars: int = 5000) -> str:
+    p = Path.home() / ".hermes" / "LESSONS.md"
+    if not p.exists():
+        return ""
+    try:
+        return read_limited(p, max_chars=max_chars)
+    except Exception:
+        return ""
 
 def read_mode_rules(mode: str) -> str:
     if mode == "auto":
@@ -156,7 +166,8 @@ def build_prompt(role: str, run_dir: Path, mode: str, internal_compression: str 
     base = read_prompt(role)
     input_txt = (run_dir / "input.md").read_text(encoding="utf-8")
     mode_rules = read_mode_rules(mode)
-    parts = [base, "\n# Research mode rules\n", mode_rules, "\n# Uživatelské zadání\n", input_txt, efficiency_contract(role, internal_compression)]
+    lessons = read_global_lessons()
+    parts = [base, "\n# Global server self-learning / Lessons\n", lessons, "\n# Research mode rules\n", mode_rules, "\n# Uživatelské zadání\n", input_txt, efficiency_contract(role, internal_compression)]
     if role in {"arbitration", "source_audit", "final_report", "quality_review"}:
         for dep in ["research_a", "research_b"]:
             p = run_dir / OUTPUT_FILES[dep]

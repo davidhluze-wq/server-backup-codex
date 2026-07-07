@@ -1,0 +1,6 @@
+# Server-wide agent instructions
+
+## Self-learning
+When the user corrects you, you catch yourself making a mistake, a command/tool fails in a way that creates a reusable lesson, or you learn a stable workflow rule on this server, add a concise one-line lesson under `## Lessons` in `/home/david_master/.hermes/LESSONS.md` before continuing.
+
+Also update the closest durable workflow file when applicable: a crew prompt, script note, Hermes skill, dashboard registry, or automation README. Keep lessons provider-neutral and do not store secrets, credentials, one-off task progress, PR IDs, or stale artifact IDs.

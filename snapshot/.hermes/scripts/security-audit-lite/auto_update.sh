@@ -17,19 +17,19 @@ if ! command -v apt-get >/dev/null 2>&1; then
 fi
 
 PRE_UPGRADABLE="$(apt list --upgradable 2>/dev/null | sed '1d' | sed -n '1,80p')"
-if ! sudo -n true 2>/dev/null; then
+
+# Do not require broad `sudo -n true`; sudoers is intentionally limited to
+# apt-get update/upgrade only. Probe the exact command this script needs.
+sudo -n apt-get update >> "$LOG" 2>&1 || {
   if [ -n "$PRE_UPGRADABLE" ]; then
     PRE_COUNT="$(printf '%s\n' "$PRE_UPGRADABLE" | sed '/^$/d' | wc -l | tr -d ' ')"
-    echo "⚠️ Auto-update: čeká $PRE_COUNT balíčků, ale chybí passwordless sudo. Spusť ručně: sudo apt-get update && sudo apt-get -y upgrade"
+    echo "⚠️ Auto-update: čeká $PRE_COUNT balíčků, ale chybí passwordless sudo pro apt-get update/upgrade. Zkontroluj /etc/sudoers.d/hermes-auto-update"
   fi
-  echo "[$(date -Is)] sudo unavailable" >> "$LOG"
-  exit 0
-fi
-
-sudo -n apt-get update >> "$LOG" 2>&1 || {
-  echo "⚠️ Auto-update: apt-get update selhal. Viz $LOG"
+  echo "[$(date -Is)] sudo apt-get update unavailable" >> "$LOG"
   exit 0
 }
+
+# apt index is fresh now.
 
 UPGRADABLE="$(apt list --upgradable 2>/dev/null | sed '1d' | sed -n '1,80p')"
 if [ -z "$UPGRADABLE" ]; then

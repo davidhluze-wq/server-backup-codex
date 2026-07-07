@@ -24,6 +24,7 @@ mkdir -p \
   snapshot/.claude/jobs \
   snapshot/.claude/plugins \
   snapshot/.hermes \
+  snapshot/home-instructions \
   snapshot/repos \
   system
 
@@ -85,6 +86,23 @@ for f in \
   fi
 done
 
+for f in \
+  "$HOME_DIR/.hermes/SOUL.md" \
+  "$HOME_DIR/.hermes/LESSONS.md" \
+  "$HOME_DIR/.hermes/LEARNING_INSTRUCTIONS.md" \
+  "$HOME_DIR/AGENTS.md" \
+  "$HOME_DIR/CLAUDE.md" \
+  "$HOME_DIR/.hermes.md"; do
+  if [ -f "$f" ]; then
+    case "$f" in
+      "$HOME_DIR/.hermes"/*) dest="$BACKUP_DIR/snapshot/.hermes/${f#$HOME_DIR/.hermes/}" ;;
+      *) dest="$BACKUP_DIR/snapshot/home-instructions/${f#$HOME_DIR/}" ;;
+    esac
+    mkdir -p "$(dirname "$dest")"
+    cp "$f" "$dest"
+  fi
+done
+
 rsync -a \
   "$HOME_DIR/.hermes/config.yaml" \
   "$HOME_DIR/.hermes/channel_directory.json" \
@@ -143,6 +161,8 @@ for repo in "$HOME_DIR/.agent2telegram-src" "$HOME_DIR/.agentsmon-src" "$HOME_DI
 done
 
 tmux ls > system/tmux-sessions.txt 2>&1 || true
+cp "$0" system/weekly-server-agent-backup.sh
+chmod 600 system/weekly-server-agent-backup.sh
 ps -eo pid,ppid,user,etime,cmd --sort=cmd > system/processes.txt 2>&1 || true
 systemctl --user --no-pager --type=service --state=running > system/user-services.txt 2>&1 || true
 crontab -l > system/crontab.txt 2>&1 || true

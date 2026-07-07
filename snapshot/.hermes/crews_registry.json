@@ -377,7 +377,7 @@
       "host": "vps",
       "dir": "lana-trading",
       "doc": "lana-trading/README.md",
-      "description": "Trading crew (fáze 4/5): analytici → risk → exekuce → reviewer. Živě v Lana → záložka 📈 Trading. Offline dry-run bez tokenů; demo od 2026-07-07.",
+      "description": "Trading crew (fáze 4/5): analytici → risk → exekuce → reviewer. Strategie: AI Compute Supercycle à la Aschenbrenner × EllioTrades (long energetika/datacentra, hedge přehřátých čipů, krypto). EllioTrades YouTube napojen do RAG. Živě: Lana → 📈 Trading.",
       "modes": [
         "demo",
         "paper",
@@ -434,7 +434,8 @@
           "tier": "drahy",
           "doc": "lana-trading/prompts/reviewer.md"
         }
-      ]
+      ],
+      "strategy": "aschenbrenner-ellio (AI compute supercycle)"
     },
     {
       "name": "hermes-architect",

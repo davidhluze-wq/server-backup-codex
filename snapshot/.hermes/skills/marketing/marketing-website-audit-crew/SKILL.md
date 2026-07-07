@@ -187,3 +187,4 @@ Before delivering:
 ## References
 
 - `references/retrobudka-session-notes.md` — notes from the retrobudka.cz audit run, including HTTPS fallback and partial-agent-finalization pattern.
+- `references/caveman-internal-compression.md` — how marketing crew uses caveman-lite for internal specialist handoffs while preserving final report/PDF quality.

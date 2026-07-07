@@ -52,9 +52,19 @@ def recent_history(n=20):
     lines=[x.strip() for x in HISTORY.read_text(encoding='utf-8',errors='replace').splitlines() if x.strip()]
     return '\n'.join(lines[-n:]) or '(zatím nic)'
 
+def global_lessons(max_chars=4000):
+    p=Path.home()/'.hermes'/'LESSONS.md'
+    if not p.exists(): return ''
+    txt=p.read_text(encoding='utf-8',errors='replace')
+    if len(txt)<=max_chars: return txt
+    return txt[:max_chars//2]+f'\n\n[...TRUNCATED {len(txt)-max_chars} CHARS; FULL FILE ON DISK...]\n\n'+txt[-max_chars//2:]
+
 def prompt():
     n=now_cz()
     return f'''Pracuj POUZE s web search nástrojem. Aktuální čas: {n:%d.%m.%Y %H:%M} Praha.
+
+GLOBAL SELF-LEARNING / LESSONS — zohledni tyto serverové lekce a pokud narazíš na novou opakovatelnou chybu, vrať jednu stručnou lekci pro orchestrátor:
+{global_lessons()}
 
 Připrav ranní AI + automotive trend radar pro Telegram, ale POŠLI HO POUZE tehdy, když se za posledních 24 hodin stala významná NOVÁ okolnost, která téma posouvá. Nechci každý den stejné titulky ani stejné kauzy jen s jinou formulací.
 

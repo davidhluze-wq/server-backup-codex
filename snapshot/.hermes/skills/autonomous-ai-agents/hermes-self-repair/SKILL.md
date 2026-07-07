@@ -13,6 +13,8 @@ metadata:
 
 Use this skill for ANY change to Hermes's own setup: `~/.hermes/config.yaml`, `profiles/*`, `skills/*`, `cron/jobs.json`, orchestration prompts/scripts under `~/.hermes/deepresearch` or `~/.hermes/marketing-crew`. The binding policy is `~/Hermes/policies/self-repair.md` — never bypass it.
 
+Server-wide self-learning rule: for all Hermes self-repair/config/prompt/crew changes, preserve reusable mistakes and operational lessons as one-line entries under `## Lessons` in `/home/david_master/.hermes/LESSONS.md`, and update the closest durable workflow prompt/script/skill when the lesson affects a recurring workflow. Keep lessons provider-neutral and never store secrets or one-off task progress.
+
 ## Preconditions
 - `~/.hermes` is a git repo. Verify with `git -C ~/.hermes status --short`. If the tree is dirty with changes you did not make, STOP and report — do not commit someone else's changes.
 - Count today's self-repair commits: `git -C ~/.hermes log --since=midnight --oneline | wc -l`. If ≥ 3, STOP: daily limit reached.

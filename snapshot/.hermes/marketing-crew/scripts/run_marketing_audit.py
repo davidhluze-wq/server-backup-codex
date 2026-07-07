@@ -103,7 +103,19 @@ def read_limited(path: Path, max_chars: int = 8000) -> str:
     txt = path.read_text(encoding="utf-8", errors="replace")
     if len(txt) <= max_chars:
         return txt
-    return txt[: max_chars // 2] + f"\n\n[...TRUNCATED {len(txt)-max_chars} CHARS; FULL FILE ON DISK...]\n\n" + txt[-max_chars // 2 :]
+    head = max_chars // 2
+    tail = max_chars - head
+    return txt[:head] + f"\n\n[...TRUNCATED {len(txt)-max_chars} CHARS; FULL FILE ON DISK...]\n\n" + txt[-tail:]
+
+
+def read_global_lessons(max_chars: int = 5000) -> str:
+    p = Path.home() / ".hermes" / "LESSONS.md"
+    if not p.exists():
+        return ""
+    try:
+        return read_limited(p, max_chars=max_chars)
+    except Exception:
+        return ""
 
 
 def compact_probe_json(path: Path, max_chars: int = 5000) -> str:
@@ -183,7 +195,7 @@ def build_prompt(role: str, run_dir: Path, internal_compression: str = "caveman"
 # Output contract
 Return ONLY the final Markdown content for your assigned role. Do not call file tools. Do not say you cannot write files; the orchestrator captures your stdout and saves it to the correct file. Be concise, evidence-based, and finish in one response.
 """
-    parts = [base, "\n# Audit rules\n", rules, "\n# User input\n", input_txt, efficiency_contract(role, internal_compression), io_contract]
+    parts = [base, "\n# Global server self-learning / Lessons\n", read_global_lessons(), "\n# Audit rules\n", rules, "\n# User input\n", input_txt, efficiency_contract(role, internal_compression), io_contract]
     md_probe = run_dir / OUTPUT_FILES["website_probe"]
     if md_probe.exists():
         parts += [f"\n# {md_probe.name}\n", read_limited(md_probe, max_chars=6000)]

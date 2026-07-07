@@ -85,6 +85,7 @@ For recurring audit in Hermes:
 - Failsafe and digest jobs can be `no_agent=True` scripts delivered to `origin`.
 - Failsafe should print only when today’s report is missing; empty stdout means silent success.
 - Digest should extract `## Shrnutí pro Telegram` verbatim and send that.
+- For this user, recurring audit/update jobs are not complete until they are also visible in agentsmon's `Automatické běhy` dashboard with an expandable description and Start/Stop control when feasible. Use the `agentsmon-automation-dashboard` skill for the registration/control pattern.
 
 ### Avoid brittle collector quoting
 
@@ -111,6 +112,30 @@ Before claiming completion:
 - Validate `status.json` parses.
 - Run the digest extractor and confirm it prints the expected semafor.
 - Confirm cron jobs are scheduled and enabled when scheduling was requested.
+
+## Auto-update sudoers pitfall
+
+When enabling Hermes-managed apt updates with narrowly scoped `NOPASSWD`, do **not** test with broad `sudo -n true`: that should remain denied. Test the exact allowed commands instead:
+
+```bash
+sudo -u david_master sudo -n apt-get update
+sudo -u david_master sudo -n apt-get -y upgrade
+sudo -u david_master sudo -n env DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+```
+
+The auto-update script should likewise probe `sudo -n apt-get update`, not `sudo -n true`, otherwise a correctly least-privilege sudoers file is misdiagnosed as missing sudo.
+
+Known-good limited sudoers shape:
+
+```sudoers
+Cmnd_Alias HERMES_APT_UPDATE = /usr/bin/apt-get update
+Cmnd_Alias HERMES_APT_UPGRADE = /usr/bin/apt-get -y upgrade
+Cmnd_Alias HERMES_APT_UPGRADE_ENV = /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y upgrade, /usr/bin/env DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -y upgrade
+
+david_master ALL=(root) NOPASSWD: HERMES_APT_UPDATE, HERMES_APT_UPGRADE, HERMES_APT_UPGRADE_ENV
+```
+
+Validate as root with `visudo -cf /etc/sudoers.d/hermes-auto-update` before testing.
 
 ## References
 

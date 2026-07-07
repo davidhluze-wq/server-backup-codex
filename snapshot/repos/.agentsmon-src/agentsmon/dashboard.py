@@ -108,13 +108,13 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head>
       <p class="text-[11px] text-slate-400 mt-2">otevřené tasky z Hermes Kanbanu (živě)</p>
     </section>
     <section class="mb-6">
-      <h2 class="text-base font-semibold mb-3">Opakující se úlohy (cron)</h2>
+      <h2 class="text-base font-semibold mb-3">Automatické běhy</h2>
       <div class="rounded-lg border border-slate-200 bg-white overflow-x-auto">
         <table class="w-full text-sm"><thead><tr class="text-[11px] uppercase tracking-wide text-slate-400 border-b border-slate-100">
-          <th class="text-left font-medium px-2 py-2">Název</th><th class="text-left font-medium px-2 py-2">Schedule</th><th class="text-left font-medium px-2 py-2">Poslední běh</th></tr></thead>
-          <tbody id="kanban-cron"><tr><td colspan="3" class="px-3 py-3 text-slate-400">loading…</td></tr></tbody></table>
+          <th class="text-left font-medium px-2 py-2">Název + popisek</th><th class="text-left font-medium px-2 py-2">Schedule</th><th class="text-left font-medium px-2 py-2">Poslední běh / stav</th><th class="text-right font-medium px-2 py-2">Akce</th></tr></thead>
+          <tbody id="kanban-cron"><tr><td colspan="4" class="px-3 py-3 text-slate-400">loading…</td></tr></tbody></table>
       </div>
-      <p class="text-[11px] text-slate-400 mt-2">Hermes cron úlohy · 🟢 zero-LLM = neplatí tokeny</p>
+      <p class="text-[11px] text-slate-400 mt-2">Hermes cron + externí automatické běhy registrované v agentsmon · 🟢 zero-LLM = neplatí tokeny · Stop pozastaví budoucí běhy</p>
     </section>
   </div>
 
@@ -331,6 +331,7 @@ document.addEventListener("click", async e=>{
 });
 // ---- Tabs ----
 let ACTIVE="overview";
+const AUTO_OPEN = new Set();
 function tabBtnCls(on){return "px-3 py-1.5 rounded-md text-sm font-medium "+(on?"bg-slate-800 text-white":"text-slate-500 hover:bg-slate-100");}
 function showTab(t){
   ACTIVE=t;
@@ -391,15 +392,64 @@ async function loadKanban(){
       `<tr><td colspan="3" class="px-3 py-3 text-slate-400 text-sm">Žádné otevřené kanban úkoly.</td></tr>`;
     const cnt=document.querySelector(".kanban-tasks-count"); if(cnt) cnt.textContent=(d.tasks?d.tasks.length:0)+" otevřených";
     const ct=document.getElementById("kanban-cron");
-    ct.innerHTML=(d.cron&&d.cron.length)?d.cron.map(c=>`<tr class="border-b border-slate-100 last:border-0 ${c.enabled?"":"opacity-50"}">
-        <td class="px-2 py-1.5 text-slate-700">${c.zero_llm?"🟢 ":""}${esc(c.name)}</td>
+    ct.innerHTML=(d.cron&&d.cron.length)?d.cron.map(c=>{
+      const enabled = c.enabled !== false;
+      const action = enabled ? "stop" : "start";
+      const btnCls = enabled ? "text-rose-600 hover:bg-rose-50 border-rose-200" : "text-emerald-700 hover:bg-emerald-50 border-emerald-200";
+      const sourceBadge = c.source ? `<span class="ml-1 text-[10px] rounded px-1 py-0.5 bg-slate-100 text-slate-500">${esc(c.source)}</span>` : "";
+      const url = c.url ? `<a class="text-sky-600 hover:underline" href="${esc(c.url)}" target="_blank" rel="noopener">výstup ↗</a>` : "";
+      const meta = c.meta_url ? `<a class="text-sky-600 hover:underline ml-2" href="${esc(c.meta_url)}" target="_blank" rel="noopener">meta ↗</a>` : "";
+      const key = `${c.source||""}|${c.id||""}`;
+      const isOpen = AUTO_OPEN.has(key);
+      return `<tr class="border-b border-slate-100 last:border-0 ${enabled?"":"opacity-60"}">
+        <td class="px-2 py-1.5 text-slate-700"><div class="auto-detail-wrap">
+          <div class="flex items-center gap-2">
+            <span class="font-medium">${c.zero_llm?"🟢 ":""}${esc(c.name)}</span>${sourceBadge}
+            <button type="button" class="auto-detail-toggle ml-auto text-[11px] rounded border border-slate-200 px-1.5 py-0.5 ${isOpen?"text-slate-600 bg-slate-50 hover:bg-slate-100":"text-sky-600 bg-sky-50 hover:bg-sky-100"}" data-key="${esc(key)}">${isOpen?"▾ Skrýt":"▸ Detail"}</button>
+          </div>
+          <div class="auto-detail ${isOpen?"":"hidden"} mt-2 rounded-md bg-slate-50 border border-slate-100 p-2 text-xs text-slate-600 leading-relaxed max-w-xl">
+            <div class="font-semibold text-slate-500 mb-1">Co tento automatický běh dělá</div>
+            <div class="whitespace-pre-wrap">${esc(c.description||"Bez popisku.")}</div>
+            <div class="font-semibold text-slate-500 mt-2 mb-1">Spouštěný script / command</div>
+            <div class="font-mono text-[11px] text-slate-400 break-all">${esc(c.command||c.script||c.id||"")}</div>
+            <div class="mt-2">${url}${meta}</div>
+          </div></div></td>
         <td class="px-2 py-1.5 font-mono text-xs text-slate-500 whitespace-nowrap">${esc(c.schedule)}</td>
-        <td class="px-2 py-1.5 text-xs ${c.last_ok?"text-emerald-600":"text-slate-500"}">${esc(c.last||"")}</td></tr>`).join(""):
-      `<tr><td colspan="3" class="px-3 py-3 text-slate-400 text-sm">Žádné cron úlohy.</td></tr>`;
+        <td class="px-2 py-1.5 text-xs ${c.last_ok?"text-emerald-600":"text-slate-500"}">${enabled?"🟢 aktivní":"⏸ pozastaveno"}${c.last?" · "+esc(c.last):""}</td>
+        <td class="px-2 py-1.5 text-right whitespace-nowrap"><button class="auto-act border rounded px-2 py-1 text-xs font-medium ${btnCls}" data-source="${esc(c.source||"")}" data-id="${esc(c.id||"")}" data-action="${action}">${enabled?"Stop":"Start"}</button></td></tr>`;
+    }).join(""):
+      `<tr><td colspan="4" class="px-3 py-3 text-slate-400 text-sm">Žádné automatické běhy.</td></tr>`;
   }catch(e){
-    document.getElementById("kanban-cron").innerHTML='<tr><td colspan="3" class="px-3 py-3 text-slate-400 text-sm">nelze načíst</td></tr>';
+    document.getElementById("kanban-cron").innerHTML='<tr><td colspan="4" class="px-3 py-3 text-slate-400 text-sm">nelze načíst</td></tr>';
   }
 }
+
+// Toggle visible details for automatic runs.
+document.addEventListener("click", e=>{
+  const btn=e.target.closest(".auto-detail-toggle"); if(!btn) return;
+  const wrap=btn.closest(".auto-detail-wrap"); if(!wrap) return;
+  const detail=wrap.querySelector(".auto-detail"); if(!detail) return;
+  const closed=detail.classList.contains("hidden");
+  detail.classList.toggle("hidden", !closed);
+  if(btn.dataset.key){ closed ? AUTO_OPEN.add(btn.dataset.key) : AUTO_OPEN.delete(btn.dataset.key); }
+  btn.textContent=closed?"▾ Skrýt":"▸ Detail";
+  btn.className="auto-detail-toggle ml-auto text-[11px] rounded border border-slate-200 px-1.5 py-0.5 "+(closed?"text-slate-600 bg-slate-50 hover:bg-slate-100":"text-sky-600 bg-sky-50 hover:bg-sky-100");
+});
+
+// Start / Stop automatic runs → Hermes cron pause/resume or registered external run toggles.
+document.addEventListener("click", async e=>{
+  const btn=e.target.closest(".auto-act"); if(!btn) return;
+  const id=btn.dataset.id, source=btn.dataset.source, action=btn.dataset.action;
+  if(action==="stop" && !confirm(`Pozastavit automatický běh "${id}"?`)) return;
+  btn.disabled=true; btn.classList.add("opacity-40");
+  showToast((action==="start"?"▶ Start ":"⏸ Stop ")+id+"…");
+  try{
+    const r=await fetch("/api/auto/action",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,source,action})});
+    const j=await r.json().catch(()=>({}));
+    showToast((j&&j.ok?"✓ ":"⚠ ")+((j&&j.message)||(r.ok?"done":"failed")));
+  }catch(err){ showToast("⚠ "+err); }
+  setTimeout(loadKanban, 900);
+});
 
 refresh();
 setInterval(()=>{ refresh(); if(ACTIVE==="kanban") loadKanban(); }, POLL*1000);
@@ -530,6 +580,8 @@ def _agent_action(name: str, action: str) -> tuple[bool, str]:
 
 
 HERMES_HOME = os.path.expanduser("~/.hermes")
+STATE_DIR = os.environ.get("AGENTSMON_STATE", os.path.expanduser("~/.local/state/agentsmon"))
+AUTOMATIC_RUNS_PATH = os.path.join(STATE_DIR, "automatic_runs.json")
 
 
 def _crews() -> bytes:
@@ -542,26 +594,136 @@ def _crews() -> bytes:
         return json.dumps({"crews": []}).encode()
 
 
-def _kanban() -> bytes:
-    """Kanban tab (tab 3) — open kanban tasks (from kanban.db) + recurring cron jobs (from the cron
-    store, not the CLI). Passive live view."""
-    cron = []
+def _cron_lines() -> list[str]:
+    res = subprocess.run(["crontab", "-l"], capture_output=True, text=True, timeout=10)
+    if res.returncode != 0:
+        return []
+    return res.stdout.splitlines()
+
+
+def _write_cron_lines(lines: list[str]) -> None:
+    text = "\n".join(lines).rstrip() + "\n"
+    subprocess.run(["crontab", "-"], input=text, text=True, check=True, timeout=10)
+
+
+def _load_external_runs() -> list[dict]:
+    try:
+        with open(AUTOMATIC_RUNS_PATH, encoding="utf-8") as fh:
+            return json.load(fh).get("runs", [])
+    except (OSError, ValueError):
+        return []
+
+
+def _external_enabled(run: dict) -> bool:
+    line = (run.get("schedule", "") + " " + run.get("command", "")).strip()
+    disabled = "# agentsmon-disabled " + run.get("id", "") + " | " + line
+    for cur in _cron_lines():
+        if cur.strip() == line:
+            return True
+        if cur.strip() == disabled:
+            return False
+    return False
+
+
+def _external_last(run: dict) -> tuple[str, bool]:
+    bits = []
+    for p in [run.get("log")]:
+        if p and os.path.exists(os.path.expanduser(p)):
+            try:
+                st = os.stat(os.path.expanduser(p))
+                bits.append("log " + time.strftime("%Y-%m-%d %H:%M", time.localtime(st.st_mtime)))
+            except OSError:
+                pass
+    if run.get("meta_url") and "commodities" in run.get("id", ""):
+        # Avoid network here; read the local published meta when available.
+        meta = os.path.expanduser("~/commodity-etl/public/commodities_meta.json")
+        try:
+            with open(meta, encoding="utf-8") as fh:
+                d = json.load(fh)
+            bits.insert(0, f"updated {d.get('updated')} · {d.get('rows')} rows")
+        except (OSError, ValueError):
+            pass
+    return (" · ".join(b for b in bits if b), True)
+
+
+def _automation_rows() -> list[dict]:
+    """Rows for the dashboard's Automatic runs table: Hermes cron + registered external crontab jobs."""
+    rows = []
     try:
         with open(os.path.join(HERMES_HOME, "cron", "jobs.json"), encoding="utf-8") as fh:
             jobs = json.load(fh).get("jobs", [])
         for j in jobs:
             sched = j.get("schedule") or {}
             lr = j.get("last_run_at") or ""
-            cron.append({
+            prompt = (j.get("prompt") or "").strip().replace("\n", " ")
+            if len(prompt) > 600:
+                prompt = prompt[:600].rstrip() + "…"
+            rows.append({
+                "id": j.get("id"),
+                "source": "hermes-cron",
                 "name": j.get("name"),
                 "schedule": (sched.get("expr") if isinstance(sched, dict) else "") or j.get("schedule_display") or "",
                 "enabled": j.get("enabled", True),
                 "zero_llm": bool(j.get("no_agent")),
+                "script": j.get("script") or "",
+                "command": j.get("script") or "Hermes agent prompt",
+                "description": prompt or ("Script-only Hermes cron job." if j.get("no_agent") else "Hermes scheduled agent job."),
                 "last": ((j.get("last_status") or "") + (" · " + lr[:16].replace("T", " ") if lr else "")).strip(" ·"),
                 "last_ok": (j.get("last_status") == "ok"),
             })
     except (OSError, ValueError):
         pass
+    for run in _load_external_runs():
+        last, ok = _external_last(run)
+        rows.append({
+            "id": run.get("id"),
+            "source": run.get("source", "external"),
+            "name": run.get("name"),
+            "schedule": run.get("schedule", ""),
+            "enabled": _external_enabled(run),
+            "zero_llm": bool(run.get("zero_llm", True)),
+            "command": run.get("command", ""),
+            "description": run.get("description", ""),
+            "last": last,
+            "last_ok": ok,
+            "url": run.get("url"),
+            "meta_url": run.get("meta_url"),
+        })
+    return rows
+
+
+def _auto_action(run_id: str, source: str, action: str) -> tuple[bool, str]:
+    if action not in ("start", "stop"):
+        return False, "unknown action"
+    if source == "hermes-cron":
+        cmd = ["hermes", "cron", "resume" if action == "start" else "pause", run_id]
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        if res.returncode == 0:
+            return True, ("started " if action == "start" else "stopped ") + run_id
+        return False, (res.stderr or res.stdout or "hermes cron command failed")[-300:]
+    run = next((r for r in _load_external_runs() if r.get("id") == run_id), None)
+    if not run:
+        return False, f"unknown automatic run '{run_id}'"
+    line = (run.get("schedule", "") + " " + run.get("command", "")).strip()
+    disabled = "# agentsmon-disabled " + run_id + " | " + line
+    lines = _cron_lines()
+    if action == "stop":
+        changed = [disabled if x.strip() == line else x for x in lines]
+        if changed == lines:
+            return True, f"{run_id} already stopped"
+        _write_cron_lines(changed)
+        return True, f"stopped {run_id}"
+    # start
+    changed = [line if x.strip() == disabled else x for x in lines]
+    if changed == lines and not any(x.strip() == line for x in lines):
+        changed.append(line)
+    _write_cron_lines(changed)
+    return True, f"started {run_id}"
+
+
+def _kanban() -> bytes:
+    """Kanban tab (tab 3): open kanban tasks + all automatic recurring runs."""
+    cron = _automation_rows()
     tasks = []
     try:
         import sqlite3
@@ -715,6 +877,22 @@ def serve(host: str, port: int) -> None:
             self.end_headers()
 
         def do_GET(self):
+            # Verejna (bez auth) komoditni data pro Power BI (Hybrid). Jen tyto dva soubory z public dir.
+            _pub = self.path.split("?", 1)[0]
+            if _pub in ("/commodities.csv", "/commodities.json"):
+                fn = os.path.join(os.path.expanduser("~/commodity-etl/public"),
+                                  "commodities.csv" if _pub.endswith(".csv") else "commodities_meta.json")
+                try:
+                    with open(fn, "rb") as fh:
+                        data = fh.read()
+                except OSError:
+                    self.send_response(404); self.end_headers(); return
+                self.send_response(200)
+                self.send_header("Content-Type",
+                                 "text/csv; charset=utf-8" if _pub.endswith(".csv") else "application/json")
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers(); self.wfile.write(data); return
             if auth_user and auth_hash and not _auth_ok(self.headers.get("Authorization"),
                                                         auth_user, auth_hash):
                 return self._denied()
@@ -771,7 +949,7 @@ def serve(host: str, port: int) -> None:
                 return self._denied()
             from urllib.parse import urlparse, parse_qs
             parsed = urlparse(self.path)
-            if parsed.path != "/api/agent/action":
+            if parsed.path not in ("/api/agent/action", "/api/auto/action"):
                 self.send_response(404)
                 self.end_headers()
                 return
@@ -783,6 +961,26 @@ def serve(host: str, port: int) -> None:
             except ValueError:
                 params = {k: v[0] for k, v in parse_qs(raw.decode("utf-8", "replace")).items()}
             qs = parse_qs(parsed.query)
+            if parsed.path == "/api/auto/action":
+                run_id = params.get("id") or (qs.get("id", [None])[0])
+                source = params.get("source") or (qs.get("source", [None])[0]) or ""
+                act = params.get("action") or (qs.get("action", [None])[0])
+                if not run_id or act not in ("start", "stop"):
+                    body = json.dumps({"ok": False, "error": "need id + action (start|stop)"}).encode()
+                    status = 400
+                else:
+                    try:
+                        ok, msg = _auto_action(run_id, source, act)
+                    except Exception as exc:
+                        ok, msg = False, str(exc)
+                    body = json.dumps({"ok": ok, "message": msg}).encode()
+                    status = 200 if ok else 500
+                self.send_response(status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
             name = params.get("name") or (qs.get("name", [None])[0])
             act = params.get("action") or (qs.get("action", [None])[0])
             if not name or act not in ("restart", "stop"):

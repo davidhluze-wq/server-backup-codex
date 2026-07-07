@@ -203,3 +203,4 @@ For this user:
 
 - Session-specific implementation note: `references/2026-07-02-hermes-deepresearch-mvp.md`
 - Production extension note: `references/2026-07-02-deepresearch-gpt55-claude-drive-telegram.md`
+- Caveman internal compression note: `references/caveman-internal-compression.md`

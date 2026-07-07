@@ -16,6 +16,18 @@ syntéza worker-gpt-mini) → návrh do `~/Hermes/docs/proposals/` + souhrn na T
 5. **quality-editor** — kvalita výstupů + zpřesňování instrukcí (.md prompty crew)
 6. **trend-scout** — relevantní GitHub trendy a nové vzory k převzetí
 
+## Lessons backlog jako zdroj optimalizací
+
+Každý běh ingestuje `/home/david_master/.hermes/LESSONS.md` jako explicitní backlog opakovaných chyb, třecích míst a provozních pravidel. Architekt z něj nemá jen pasivně číst pravidla; má z relevantních lekcí navrhovat systémovou prevenci:
+
+- úpravu promptů / skillů / scriptů,
+- změnu cron rozvrhu nebo model routingu,
+- dashboard/agentsmon zviditelnění,
+- guardrail proti opakování chyby,
+- levnější nebo spolehlivější workflow.
+
+Výstup zůstává **propose-only**: návrh přesné změny + přínos + riziko, bez automatického nasazení.
+
 ## Zásady (dle policies/self-repair.md)
 - **Pouze návrhy.** Žádná bezobslužná změna. Aplikace až po Davidově „ano" → git commit → canary → rollback.
 - **Šetrnost tokenů:** většina práce zero-LLM ve sběrném skriptu; jedna levná syntéza za 3 dny, ořezaná fakta, max 6 návrhů.

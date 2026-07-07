@@ -1,4 +1,5 @@
 .gitignore
+AUTOMATION.md
 README.md
 RESTORE_NOTES.md
 snapshot/.claude/daemon/roster.json
@@ -66,6 +67,9 @@ snapshot/.config/agent2telegram/attach_sent.txt
 snapshot/.config/agent2telegram/config.json
 snapshot/.config/agent2telegram/config.json.bak.20260705_074846
 snapshot/.config/agent2telegram/david-claude.json
+snapshot/.hermes/LEARNING_INSTRUCTIONS.md
+snapshot/.hermes/LESSONS.md
+snapshot/.hermes/SOUL.md
 snapshot/.hermes/channel_directory.json
 snapshot/.hermes/config.yaml
 snapshot/.hermes/crews_registry.json
@@ -202,6 +206,9 @@ snapshot/.hermes/skills/.archive/dedup-20260703/deepresearch-orchestration/refer
 snapshot/.hermes/skills/.archive/dedup-20260703/marketing-crew-orchestration/SKILL.md
 snapshot/.hermes/skills/.archive/dedup-20260703/marketing-crew-orchestration/references/2026-07-03-marketing-crew-mvp.md
 snapshot/.hermes/skills/.bundled_manifest
+snapshot/.hermes/skills/.curator_backups/2026-07-07T22-10-31Z/cron-jobs.json
+snapshot/.hermes/skills/.curator_backups/2026-07-07T22-10-31Z/manifest.json
+snapshot/.hermes/skills/.curator_backups/2026-07-07T22-10-31Z/skills.tar.gz
 snapshot/.hermes/skills/.curator_state
 snapshot/.hermes/skills/.usage.json
 snapshot/.hermes/skills/apple/DESCRIPTION.md
@@ -446,7 +453,10 @@ snapshot/.hermes/skills/creative/touchdesigner-mcp/references/troubleshooting.md
 snapshot/.hermes/skills/creative/touchdesigner-mcp/scripts/setup.sh
 snapshot/.hermes/skills/data-science/DESCRIPTION.md
 snapshot/.hermes/skills/data-science/jupyter-live-kernel/SKILL.md
+snapshot/.hermes/skills/devops/agentsmon-automation-dashboard/SKILL.md
+snapshot/.hermes/skills/devops/agentsmon-automation-dashboard/references/2026-07-07-agentsmon-automatic-runs.md
 snapshot/.hermes/skills/devops/hermes-dashboard-remote-access/SKILL.md
+snapshot/.hermes/skills/devops/hermes-dashboard-remote-access/references/basic-auth-auto-sso.md
 snapshot/.hermes/skills/devops/linux-security-audit-automation/SKILL.md
 snapshot/.hermes/skills/devops/linux-security-audit-automation/references/security-audit-lite-session.md
 snapshot/.hermes/skills/devops/linux-system-updates/SKILL.md
@@ -474,6 +484,7 @@ snapshot/.hermes/skills/github/github-pr-workflow/templates/pr-body-feature.md
 snapshot/.hermes/skills/github/github-repo-management/SKILL.md
 snapshot/.hermes/skills/github/github-repo-management/references/github-api-cheatsheet.md
 snapshot/.hermes/skills/marketing/marketing-website-audit-crew/SKILL.md
+snapshot/.hermes/skills/marketing/marketing-website-audit-crew/references/caveman-internal-compression.md
 snapshot/.hermes/skills/marketing/marketing-website-audit-crew/references/retrobudka-session-notes.md
 snapshot/.hermes/skills/media/DESCRIPTION.md
 snapshot/.hermes/skills/media/gif-search/SKILL.md
@@ -559,6 +570,8 @@ snapshot/.hermes/skills/productivity/ocr-and-documents/SKILL.md
 snapshot/.hermes/skills/productivity/ocr-and-documents/scripts/extract_marker.py
 snapshot/.hermes/skills/productivity/ocr-and-documents/scripts/extract_pymupdf.py
 snapshot/.hermes/skills/productivity/petdex/SKILL.md
+snapshot/.hermes/skills/productivity/powerbi-data-etl/SKILL.md
+snapshot/.hermes/skills/productivity/powerbi-data-etl/references/commodity-etl-public-sources.md
 snapshot/.hermes/skills/productivity/powerpoint/LICENSE.txt
 snapshot/.hermes/skills/productivity/powerpoint/SKILL.md
 snapshot/.hermes/skills/productivity/powerpoint/editing.md
@@ -580,6 +593,7 @@ snapshot/.hermes/skills/research/blogwatcher/SKILL.md
 snapshot/.hermes/skills/research/hermes-deepresearch-orchestration/SKILL.md
 snapshot/.hermes/skills/research/hermes-deepresearch-orchestration/references/2026-07-02-deepresearch-gpt55-claude-drive-telegram.md
 snapshot/.hermes/skills/research/hermes-deepresearch-orchestration/references/2026-07-02-hermes-deepresearch-mvp.md
+snapshot/.hermes/skills/research/hermes-deepresearch-orchestration/references/caveman-internal-compression.md
 snapshot/.hermes/skills/research/llm-wiki/SKILL.md
 snapshot/.hermes/skills/research/polymarket/SKILL.md
 snapshot/.hermes/skills/research/polymarket/references/api-endpoints.md
@@ -653,6 +667,9 @@ snapshot/.hermes/skills/software-development/spike/SKILL.md
 snapshot/.hermes/skills/software-development/systematic-debugging/SKILL.md
 snapshot/.hermes/skills/software-development/test-driven-development/SKILL.md
 snapshot/.hermes/skills/yuanbao/SKILL.md
+snapshot/home-instructions/.hermes.md
+snapshot/home-instructions/AGENTS.md
+snapshot/home-instructions/CLAUDE.md
 snapshot/repos/.agent2telegram-src/.github/workflows/ci.yml
 snapshot/repos/.agent2telegram-src/.gitignore
 snapshot/repos/.agent2telegram-src/AGENTS.md
@@ -774,3 +791,4 @@ system/repo-status.txt
 system/tmux-sessions.txt
 system/ufw-status.txt
 system/user-services.txt
+system/weekly-server-agent-backup.sh

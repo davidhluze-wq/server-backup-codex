@@ -47,6 +47,22 @@ PY
     grep -iE 'CVE|krit|warn|rizik|pozor|důležit|action|doporuč|selh' "$H/security-audit-lite/report-latest.md" 2>/dev/null | head -6 | cut -c1-140
   fi
   echo
+  echo "## Lessons backlog — zdroj nápadů na optimalizaci"
+  echo "Níže jsou provider-neutrální lekce z /home/david_master/.hermes/LESSONS.md. Ber je jako backlog opakovaných třecích míst: navrhuj z nich konkrétní zlepšení workflow, promptů, dashboardů, automatizací, routingu modelů nebo guardrailů. Neaplikuj změny sám — pouze navrhni přesnou změnu."
+  if [ -f "$H/LESSONS.md" ]; then
+    /usr/bin/python3 - <<'PY'
+from pathlib import Path
+p=Path('/home/david_master/.hermes/LESSONS.md')
+txt=p.read_text(encoding='utf-8', errors='replace')
+# Keep the most actionable part; LESSONS.md is append-only and can grow.
+lines=[ln.rstrip() for ln in txt.splitlines() if ln.strip()]
+for ln in lines[-80:]:
+    print(ln[:180])
+PY
+  else
+    echo "  (LESSONS.md zatím neexistuje)"
+  fi
+  echo
   echo "## LLM cron joby (spotřebitelé tokenů)"
   /usr/bin/python3 - <<'PY'
 import json
@@ -73,10 +89,11 @@ except Exception:
  print('  (github trendy nedostupné)')" 2>/dev/null || echo "  (github n/a)"
 } > "$FACTS" 2>&1
 
-# Token šetrnost: ořízni fakta
-head -c 6500 "$FACTS" > "$FACTS.cut" 2>/dev/null && mv "$FACTS.cut" "$FACTS"
+# Token šetrnost: ořízni fakta; nech prostor pro LESSONS backlog jako zdroj optimalizačních nápadů
+head -c 9000 "$FACTS" > "$FACTS.cut" 2>/dev/null && mv "$FACTS.cut" "$FACTS"
 
 PROMPT="Jsi Hermes Architekt — revizní meta-agent pro systém více crew. Z FAKT níže navrhni KONKRÉTNÍ optimalizace. Nasazuj role-lens: security (vycházej z ingestovaného security-audit-lite reportu — NEduplikuj audit, jen navrhni co s nevyřešenými nálezy), spolehlivost (kde to škytalo), optimalizace běhu, SNÍŽENÍ spotřeby tokenů, kvalita výstupů + zpřesnění instrukcí (.md), GitHub trendy.
+DŮLEŽITÉ: sekci 'Lessons backlog — zdroj nápadů na optimalizaci' ber jako explicitní backlog opakovaných problémů a třecích míst. Z každé relevantní lekce odvoď návrh systémové prevence: prompt/skill/script/dashboard/cron/model-routing/guardrail. Pokud lekce není akční, označ ji jako 'sledovat' a nenavrhuj kosmetiku.
 PRAVIDLA: pouze NAVRHUJ, nic neaplikuj. Buď stručný a token-šetrný. Max 6 návrhů, seřaď dle poměru přínos/náklad. Každý návrh: [oblast] co • proč • odhad dopadu • přesná změna • riziko.
 Vrať PŘESNĚ dvě části oddělené značkami na vlastním řádku:
 ===PROPOSAL===

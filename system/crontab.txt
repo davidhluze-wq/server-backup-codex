@@ -2,3 +2,5 @@
 * * * * * /home/david_master/.local/state/agentsmon/agentsmon-launch.sh
 */5 * * * * /home/david_master/.hermes/infrastructure/scripts/monitor.sh
 0 0 * * * /home/david_master/lana-research/scripts/nightly_lana.sh
+15 3 * * 0 /home/david_master/.local/bin/weekly-server-agent-backup.sh
+0 6 1 * * /usr/bin/python3 /home/david_master/commodity-etl/build_commodities.py >> /home/david_master/commodity-etl/etl.log 2>&1
