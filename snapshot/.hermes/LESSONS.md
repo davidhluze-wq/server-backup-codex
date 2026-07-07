@@ -13,3 +13,4 @@ When the user corrects you, you discover a mistake, a tool/process fails, or you
 - Automatic/recurring jobs created for David must also be registered in agentsmon dashboard automatic runs with a clear expandable description and Start/Stop controls when technically feasible.
 - If `execute_code` is blocked by approval/cron trust policy, switch to explicit read/write/patch/terminal tools instead of retrying the same helper.
 - Hermes Architect must ingest `/home/david_master/.hermes/LESSONS.md` as an optimization-idea backlog and convert recurring lessons into propose-only improvements.
+- If `web_extract` reports the configured backend is search-only, verify GitHub/pages via `git ls-remote`, `gh`, `curl`, or browser instead of retrying `web_extract`.
