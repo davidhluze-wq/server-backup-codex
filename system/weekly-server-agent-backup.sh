@@ -4,6 +4,7 @@ set -euo pipefail
 HOME_DIR="/home/david_master"
 BACKUP_DIR="$HOME_DIR/server-agent-env-backup"
 LOG_DIR="$HOME_DIR/.local/state/server-agent-env-backup"
+AGENTSMON_STATE="$HOME_DIR/.local/state/agentsmon"
 BRANCH="server-agent-env-backup-20260706"
 REMOTE_URL="git@github.com:davidhluze-wq/server-backup-codex.git"
 SSH_KEY="$HOME_DIR/.ssh/server_backup_codex_ed25519"
@@ -25,6 +26,7 @@ mkdir -p \
   snapshot/.claude/plugins \
   snapshot/.hermes \
   snapshot/home-instructions \
+  snapshot/.local/state/agentsmon \
   snapshot/repos \
   system
 
@@ -102,6 +104,10 @@ for f in \
     cp "$f" "$dest"
   fi
 done
+
+if [ -f "$AGENTSMON_STATE/automatic_runs.json" ]; then
+  cp "$AGENTSMON_STATE/automatic_runs.json" "$BACKUP_DIR/snapshot/.local/state/agentsmon/automatic_runs.json"
+fi
 
 rsync -a \
   "$HOME_DIR/.hermes/config.yaml" \

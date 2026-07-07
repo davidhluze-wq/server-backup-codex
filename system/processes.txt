@@ -1,144 +1,145 @@
     PID    PPID USER         ELAPSED CMD
-    784     781 david_m+  7-00:52:36 (sd-pam)
-  76029   76028 root      6-01:36:31 (sd-pam)
-    103       2 root      7-00:52:57 [acpi_thermal_pm]
-    742       1 root      7-00:52:36 /sbin/agetty -o -p -- \u --noclear tty1 linux
-   1010     965 david_m+  7-00:52:34 agy --continue --dangerously-skip-permissions
-  79910     781 david_m+  6-01:05:40 /usr/libexec/at-spi-bus-launcher
- 481747     781 david_m+  2-14:24:18 /usr/libexec/at-spi2-registryd --use-gnome-session
-     90       2 root      7-00:52:58 [ata_sff]
- 527786       1 david_m+  2-04:25:16 /bin/bash -c source /home/david_master/.claude/shell-snapshots/snapshot-bash-1783189363532-tdlvs6.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval 'cd ~/humanagentwiki python3 - <<'"'"'PY'"'"' import os,time,shutil p=os.path.expanduser("~/humanagentwiki/.env") shutil.copy(p, p+".bak."+time.strftime("%Y%m%d_%H%M%S")) lines=open(p,encoding="utf-8").read().splitlines() out=[]; found=False for ln in lines:     if ln.strip().startswith("WEB_AUTH="):         out.append("WEB_AUTH=david:Pelesany126"); found=True     else:         out.append(ln) if not found: out.append("WEB_AUTH=david:Pelesany126") open(p,"w",encoding="utf-8").write("\n".join(out)+"\n") os.chmod(p,0o600) print("WEB_AUTH aktualizovan (found_existing=%s)"%found) PY # restart HAW Web: kill listener na 8808 podle PID, pak spust daemon restart cmd lp=$(ss -tlnp 2>/dev/null | grep '"'"':8808 '"'"' | grep -oE '"'"'pid=[0-9]+'"'"' | cut -d= -f2 | sort -u) echo "8808 listener pid: ${lp:-zadny}" for p in $lp; do kill "$p" 2>/dev/null; done cd /home/david_master/humanagentwiki && nohup sh -c '"'"'set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1'"'"' >/dev/null 2>&1 & echo "HAW Web restart spusten"' && pwd -P >| /tmp/claude-b913-cwd
- 787093   84994 david_m+       00:02 /usr/bin/bash -c source /tmp/hermes-snap-fe10d6bc14dc.sh >/dev/null 2>&1 || true builtin cd -- /home/david_master/server-agent-env-backup || exit 126 eval 'set -e /home/david_master/.local/bin/weekly-server-agent-backup.sh cd /home/david_master/server-agent-env-backup printf '\''\n=== last commit ===\n'\''; git --no-pager log -1 --oneline --decorate printf '\''\n=== remote head ===\n'\''; GIT_SSH_COMMAND='\''ssh -i /home/david_master/.ssh/server_backup_codex_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new'\'' git ls-remote origin refs/heads/server-agent-env-backup-20260706 printf '\''\n=== status ===\n'\''; git status --short printf '\''\n=== secret scan ===\n'\''; rg -n --hidden -S '\''\b[0-9]{7,12}:[A-Za-z0-9_-]{30,}\b|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|ya29\.[A-Za-z0-9_-]+|AIza[A-Za-z0-9_-]{20,}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY'\'' . --glob '\''!.git/**'\'' && exit 20 || echo '\''secret scan OK'\'' printf '\''\n=== log tail ===\n'\''; tail -35 /home/david_master/.local/state/server-agent-env-backup/weekly-backup.log' __hermes_ec=$? { export -p > /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID && mv -f /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID /tmp/hermes-snap-fe10d6bc14dc.sh; } 2>/dev/null || rm -f /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID 2>/dev/null || true pwd -P > /tmp/hermes-cwd-fe10d6bc14dc.txt 2>/dev/null || true printf '\n__HERMES_CWD_fe10d6bc14dc__%s__HERMES_CWD_fe10d6bc14dc__\n' "$(pwd -P)" exit $__hermes_ec
- 787095  787093 david_m+       00:02 bash /home/david_master/.local/bin/weekly-server-agent-backup.sh
-     88       2 root      7-00:52:58 [blkcg_punt_bio]
-    134       2 root      7-00:52:57 [charger_manager]
-    962     920 david_m+  7-00:52:34 claude --continue --dangerously-skip-permissions
- 478441  478406 david_m+  2-14:53:14 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
-     18       2 root      7-00:52:58 [cpuhp/0]
-     19       2 root      7-00:52:58 [cpuhp/1]
-     25       2 root      7-00:52:58 [cpuhp/2]
- 366906       1 root      3-14:57:21 /usr/sbin/cron -f -P
-    184       2 root      7-00:52:56 [cryptd]
-    702       1 message+  7-00:52:36 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-   1142     781 david_m+  7-00:52:32 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
- 481728   79910 david_m+  2-14:24:18 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/run/user/1000/at-spi/bus
-     93       2 root      7-00:52:58 [devfreq_wq]
-    100       2 root      7-00:52:57 [ecryptfs-kthrea]
-     92       2 root      7-00:52:58 [edac-poller]
-    321       2 root      7-00:52:53 [ext4-rsv-conver]
-    708       1 root      7-00:52:36 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
-  84994     781 david_m+  6-00:46:02 /home/david_master/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run
- 702421     781 david_m+    15:31:02 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --skip-build
-     16       2 root      7-00:52:58 [idle_inject/0]
-     20       2 root      7-00:52:58 [idle_inject/1]
-     26       2 root      7-00:52:58 [idle_inject/2]
-     32       2 root      7-00:52:58 [inet_frag_wq]
-    113       2 root      7-00:52:57 [ipv6_addrconf]
-    710       1 root      7-00:52:36 /usr/sbin/irqbalance --foreground
-    320       2 root      7-00:52:53 [jbd2/sda1-8]
-    424       2 root      7-00:52:53 [kaluad]
-     33       2 root      7-00:52:58 [kauditd]
-     87       2 root      7-00:52:58 [kblockd]
-     37       2 root      7-00:52:58 [kcompactd0]
-     31       2 root      7-00:52:58 [kdevtmpfs]
-     39       2 root      7-00:52:58 [khugepaged]
-     34       2 root      7-00:52:58 [khungtaskd]
-     86       2 root      7-00:52:58 [kintegrityd]
-    428       2 root      7-00:52:53 [kmpath_handlerd]
-    425       2 root      7-00:52:53 [kmpath_rdacd]
-    427       2 root      7-00:52:53 [kmpathd]
-     38       2 root      7-00:52:58 [ksmd]
-     13       2 root      7-00:52:58 [ksoftirqd/0]
-     22       2 root      7-00:52:58 [ksoftirqd/1]
-     28       2 root      7-00:52:58 [ksoftirqd/2]
-    125       2 root      7-00:52:57 [kstrp]
-     99       2 root      7-00:52:57 [kswapd0]
-      2       0 root      7-00:52:58 [kthreadd]
-    102       2 root      7-00:52:57 [kthrotld]
- 751619       2 root        06:37:30 [kworker/0:0-mm_percpu_wq]
-      8       2 root      7-00:52:58 [kworker/0:0H-kblockd]
- 781372       2 root           46:45 [kworker/0:1-events]
-    117       2 root      7-00:52:57 [kworker/0:1H-kblockd]
- 727920       2 root        10:31:24 [kworker/1:0-cgwb_release]
-     24       2 root      7-00:52:58 [kworker/1:0H-events_highpri]
-    112       2 root      7-00:52:57 [kworker/1:1H-kblockd]
- 763249       2 root        04:28:16 [kworker/1:2-mm_percpu_wq]
- 782167       2 root           37:03 [kworker/2:0-events]
-     30       2 root      7-00:52:58 [kworker/2:0H-events_highpri]
- 786373       2 root           03:31 [kworker/2:1]
-     96       2 root      7-00:52:58 [kworker/2:1H-kblockd]
- 781707       2 root           43:00 [kworker/2:3-mm_percpu_wq]
- 780385       2 root           56:42 [kworker/u6:0-events_unbound]
- 781374       2 root           46:40 [kworker/u6:1-flush-8:0]
- 786283       2 root           04:44 [kworker/u6:2-events_unbound]
- 783478       2 root           21:20 [kworker/u6:3-writeback]
-    129       2 root      7-00:52:57 [kworker/u7:0]
-     91       2 root      7-00:52:58 [md]
-     15       2 root      7-00:52:58 [migration/0]
-     21       2 root      7-00:52:58 [migration/1]
-     27       2 root      7-00:52:58 [migration/2]
-    111       2 root      7-00:52:57 [mld]
-     10       2 root      7-00:52:58 [mm_percpu_wq]
- 366912       1 root      3-14:57:21 /sbin/multipathd -d -s
-      6       2 root      7-00:52:58 [netns]
-    711       1 root      7-00:52:36 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
- 374761   84994 david_m+  3-13:36:48 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
- 374835   84994 david_m+  3-13:36:35 node /home/david_master/.hermes/lsp/bin/bash-language-server start
- 702135   84994 david_m+    15:32:29 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
- 746759   84994 david_m+    06:54:54 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
-     35       2 root      7-00:52:58 [oom_reaper]
- 366907       1 root      3-14:57:21 /usr/libexec/packagekitd
-  59208       1 root      6-06:50:28 /usr/libexec/polkitd --no-debug
-  84473       1 postgres  6-00:48:09 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
-  84475   84473 postgres  6-00:48:09 postgres: 14/main: checkpointer 
-  84476   84473 postgres  6-00:48:09 postgres: 14/main: background writer 
-  84477   84473 postgres  6-00:48:09 postgres: 14/main: walwriter 
-  84478   84473 postgres  6-00:48:09 postgres: 14/main: autovacuum launcher 
-  84479   84473 postgres  6-00:48:09 postgres: 14/main: stats collector 
-  84480   84473 postgres  6-00:48:09 postgres: 14/main: logical replication launcher 
- 787200  787095 david_m+       00:00 ps -eo pid,ppid,user,etime,cmd --sort=cmd
-  84946       1 david_m+  6-00:46:11 .venv/bin/python cli.py serve
- 527788  527787 david_m+  2-04:25:16 .venv/bin/python cli.py web --port 8808
- 692893       1 david_m+    17:05:00 .venv/bin/python /home/david_master/lana-research/scripts/server.py --port 8811
-  81208   81206 david_m+  6-00:55:42 /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json
- 479243       1 david_m+  2-14:51:01 /usr/bin/python3 -m agent2telegram run
- 752180     781 david_m+    06:36:23 /usr/bin/python3 -m agentsmon dashboard
-    713       1 root      7-00:52:36 /usr/sbin/qemu-ga
-    273       2 root      7-00:52:54 [raid5wq]
-      3       2 root      7-00:52:58 [rcu_gp]
-      4       2 root      7-00:52:58 [rcu_par_gp]
-     14       2 root      7-00:52:58 [rcu_sched]
-     11       2 root      7-00:52:58 [rcu_tasks_rude_]
-     12       2 root      7-00:52:58 [rcu_tasks_trace]
-    714       1 syslog    7-00:52:36 /usr/sbin/rsyslogd -n -iNONE
-    105       2 root      7-00:52:57 [scsi_eh_0]
-    107       2 root      7-00:52:57 [scsi_eh_1]
-    181       2 root      7-00:52:57 [scsi_eh_2]
-    106       2 root      7-00:52:57 [scsi_tmf_0]
-    108       2 root      7-00:52:57 [scsi_tmf_1]
-    182       2 root      7-00:52:57 [scsi_tmf_2]
-    920     855 david_m+  7-00:52:35 -sh
-    965     855 david_m+  7-00:52:34 -sh
-  76222     855 david_m+  6-01:35:06 -sh
-  81206     855 david_m+  6-00:55:42 sh -c AGENT2TELEGRAM_CONFIG=/home/david_master/.config/agent2telegram/david-claude.json PYTHONPATH=/home/david_master/.agent2telegram-src /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json >> /home/david_master/.local/state/agent2telegram/david-claude/run.log 2>&1
- 478406     855 david_m+  2-14:53:19 -sh
- 527787  527786 david_m+  2-04:25:16 sh -c set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1
-      5       2 root      7-00:52:58 [slub_flushwq]
- 675406       1 root        20:42:25 /snap/snapd/current/usr/lib/snapd/snapd
-    758       1 root      7-00:52:36 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
-      1       0 root      7-00:52:58 /sbin/init
-    781       1 david_m+  7-00:52:36 /lib/systemd/systemd --user
-  76028       1 root      6-01:36:31 /lib/systemd/systemd --user
-    396       1 root      7-00:52:53 /lib/systemd/systemd-journald
-    720       1 root      7-00:52:36 /lib/systemd/systemd-logind
-    663       1 systemd+  7-00:52:50 /lib/systemd/systemd-networkd
-    665       1 systemd+  7-00:52:50 /lib/systemd/systemd-resolved
-    563       1 systemd+  7-00:52:52 /lib/systemd/systemd-timesyncd
-    432       1 root      7-00:52:53 /lib/systemd/systemd-udevd
-    855       1 david_m+  7-00:52:35 /usr/bin/tmux new-session -d -s David - Master -c /home/david_master
-     89       2 root      7-00:52:58 [tpm_dev_wq]
-    777       1 root      7-00:52:36 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
-    110       2 root      7-00:52:57 [vfio-irqfd-clea]
-     94       2 root      7-00:52:58 [watchdogd]
-     36       2 root      7-00:52:58 [writeback]
-    128       2 root      7-00:52:57 [zswap-shrink]
+    784     781 david_m+  7-00:54:22 (sd-pam)
+  76029   76028 root      6-01:38:17 (sd-pam)
+    103       2 root      7-00:54:43 [acpi_thermal_pm]
+    742       1 root      7-00:54:22 /sbin/agetty -o -p -- \u --noclear tty1 linux
+   1010     965 david_m+  7-00:54:20 agy --continue --dangerously-skip-permissions
+  79910     781 david_m+  6-01:07:26 /usr/libexec/at-spi-bus-launcher
+ 481747     781 david_m+  2-14:26:04 /usr/libexec/at-spi2-registryd --use-gnome-session
+     90       2 root      7-00:54:44 [ata_sff]
+ 527786       1 david_m+  2-04:27:02 /bin/bash -c source /home/david_master/.claude/shell-snapshots/snapshot-bash-1783189363532-tdlvs6.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval 'cd ~/humanagentwiki python3 - <<'"'"'PY'"'"' import os,time,shutil p=os.path.expanduser("~/humanagentwiki/.env") shutil.copy(p, p+".bak."+time.strftime("%Y%m%d_%H%M%S")) lines=open(p,encoding="utf-8").read().splitlines() out=[]; found=False for ln in lines:     if ln.strip().startswith("WEB_AUTH="):         out.append("WEB_AUTH=david:Pelesany126"); found=True     else:         out.append(ln) if not found: out.append("WEB_AUTH=david:Pelesany126") open(p,"w",encoding="utf-8").write("\n".join(out)+"\n") os.chmod(p,0o600) print("WEB_AUTH aktualizovan (found_existing=%s)"%found) PY # restart HAW Web: kill listener na 8808 podle PID, pak spust daemon restart cmd lp=$(ss -tlnp 2>/dev/null | grep '"'"':8808 '"'"' | grep -oE '"'"'pid=[0-9]+'"'"' | cut -d= -f2 | sort -u) echo "8808 listener pid: ${lp:-zadny}" for p in $lp; do kill "$p" 2>/dev/null; done cd /home/david_master/humanagentwiki && nohup sh -c '"'"'set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1'"'"' >/dev/null 2>&1 & echo "HAW Web restart spusten"' && pwd -P >| /tmp/claude-b913-cwd
+ 787690   84994 david_m+       00:01 /usr/bin/bash -c source /tmp/hermes-snap-fe10d6bc14dc.sh >/dev/null 2>&1 || true builtin cd -- /home/david_master/server-agent-env-backup || exit 126 eval 'set -e bash -n /home/david_master/.local/bin/weekly-server-agent-backup.sh /home/david_master/.local/bin/weekly-server-agent-backup.sh cd /home/david_master/server-agent-env-backup printf '\''\n=== final commit ===\n'\''; git --no-pager log -1 --oneline --decorate printf '\''\n=== remote head ===\n'\''; GIT_SSH_COMMAND='\''ssh -i /home/david_master/.ssh/server_backup_codex_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new'\'' git ls-remote origin refs/heads/server-agent-env-backup-20260706 printf '\''\n=== status ===\n'\''; git status --short printf '\''\n=== key backup files ===\n'\''; git ls-tree -r --name-only HEAD | grep -E '\''automatic_runs.json|weekly-server-agent-backup.sh|LESSONS.md|AGENTS.md|CLAUDE.md|architect_review.sh|dashboard.py$'\'' | sort printf '\''\n=== secret scan ===\n'\''; rg -n --hidden -S '\''\b[0-9]{7,12}:[A-Za-z0-9_-]{30,}\b|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|ya29\.[A-Za-z0-9_-]+|AIza[A-Za-z0-9_-]{20,}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY'\'' . --glob '\''!.git/**'\'' && exit 20 || echo '\''secret scan OK'\''' __hermes_ec=$? { export -p > /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID && mv -f /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID /tmp/hermes-snap-fe10d6bc14dc.sh; } 2>/dev/null || rm -f /tmp/hermes-snap-fe10d6bc14dc.sh.tmp.$BASHPID 2>/dev/null || true pwd -P > /tmp/hermes-cwd-fe10d6bc14dc.txt 2>/dev/null || true printf '\n__HERMES_CWD_fe10d6bc14dc__%s__HERMES_CWD_fe10d6bc14dc__\n' "$(pwd -P)" exit $__hermes_ec
+ 787693  787690 david_m+       00:01 bash /home/david_master/.local/bin/weekly-server-agent-backup.sh
+     88       2 root      7-00:54:44 [blkcg_punt_bio]
+    134       2 root      7-00:54:43 [charger_manager]
+    962     920 david_m+  7-00:54:20 claude --continue --dangerously-skip-permissions
+ 478441  478406 david_m+  2-14:55:00 codex --dangerously-bypass-approvals-and-sandbox resume 019f1a39-acaa-72a1-b667-079b258ec2fd
+     18       2 root      7-00:54:44 [cpuhp/0]
+     19       2 root      7-00:54:44 [cpuhp/1]
+     25       2 root      7-00:54:44 [cpuhp/2]
+ 366906       1 root      3-14:59:07 /usr/sbin/cron -f -P
+    184       2 root      7-00:54:42 [cryptd]
+    702       1 message+  7-00:54:22 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1142     781 david_m+  7-00:54:18 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 481728   79910 david_m+  2-14:26:04 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/run/user/1000/at-spi/bus
+     93       2 root      7-00:54:44 [devfreq_wq]
+    100       2 root      7-00:54:43 [ecryptfs-kthrea]
+     92       2 root      7-00:54:44 [edac-poller]
+    321       2 root      7-00:54:39 [ext4-rsv-conver]
+    708       1 root      7-00:54:22 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+  84994     781 david_m+  6-00:47:48 /home/david_master/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run
+ 702421     781 david_m+    15:32:48 /home/david_master/.hermes/hermes-agent/venv/bin/python3 /home/david_master/.hermes/hermes-agent/venv/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --skip-build
+     16       2 root      7-00:54:44 [idle_inject/0]
+     20       2 root      7-00:54:44 [idle_inject/1]
+     26       2 root      7-00:54:44 [idle_inject/2]
+     32       2 root      7-00:54:44 [inet_frag_wq]
+    113       2 root      7-00:54:43 [ipv6_addrconf]
+    710       1 root      7-00:54:22 /usr/sbin/irqbalance --foreground
+    320       2 root      7-00:54:39 [jbd2/sda1-8]
+    424       2 root      7-00:54:39 [kaluad]
+     33       2 root      7-00:54:44 [kauditd]
+     87       2 root      7-00:54:44 [kblockd]
+     37       2 root      7-00:54:44 [kcompactd0]
+     31       2 root      7-00:54:44 [kdevtmpfs]
+     39       2 root      7-00:54:44 [khugepaged]
+     34       2 root      7-00:54:44 [khungtaskd]
+     86       2 root      7-00:54:44 [kintegrityd]
+    428       2 root      7-00:54:39 [kmpath_handlerd]
+    425       2 root      7-00:54:39 [kmpath_rdacd]
+    427       2 root      7-00:54:39 [kmpathd]
+     38       2 root      7-00:54:44 [ksmd]
+     13       2 root      7-00:54:44 [ksoftirqd/0]
+     22       2 root      7-00:54:44 [ksoftirqd/1]
+     28       2 root      7-00:54:44 [ksoftirqd/2]
+    125       2 root      7-00:54:43 [kstrp]
+     99       2 root      7-00:54:43 [kswapd0]
+      2       0 root      7-00:54:44 [kthreadd]
+    102       2 root      7-00:54:43 [kthrotld]
+ 751619       2 root        06:39:16 [kworker/0:0-events]
+      8       2 root      7-00:54:44 [kworker/0:0H-kblockd]
+ 781372       2 root           48:31 [kworker/0:1-events]
+    117       2 root      7-00:54:43 [kworker/0:1H-kblockd]
+ 727920       2 root        10:33:10 [kworker/1:0-cgwb_release]
+     24       2 root      7-00:54:44 [kworker/1:0H-events_highpri]
+    112       2 root      7-00:54:43 [kworker/1:1H-kblockd]
+ 763249       2 root        04:30:02 [kworker/1:2-events]
+ 782167       2 root           38:49 [kworker/2:0-events]
+     30       2 root      7-00:54:44 [kworker/2:0H-events_highpri]
+ 786373       2 root           05:17 [kworker/2:1]
+     96       2 root      7-00:54:44 [kworker/2:1H-kblockd]
+ 780385       2 root           58:28 [kworker/u6:0-writeback]
+ 787301       2 root           01:19 [kworker/u6:1-ext4-rsv-conversion]
+ 786283       2 root           06:30 [kworker/u6:2-flush-8:0]
+ 783478       2 root           23:06 [kworker/u6:3-flush-8:0]
+    129       2 root      7-00:54:43 [kworker/u7:0]
+     91       2 root      7-00:54:44 [md]
+     15       2 root      7-00:54:44 [migration/0]
+     21       2 root      7-00:54:44 [migration/1]
+     27       2 root      7-00:54:44 [migration/2]
+    111       2 root      7-00:54:43 [mld]
+     10       2 root      7-00:54:44 [mm_percpu_wq]
+ 366912       1 root      3-14:59:07 /sbin/multipathd -d -s
+      6       2 root      7-00:54:44 [netns]
+    711       1 root      7-00:54:22 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+ 374761   84994 david_m+  3-13:38:34 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
+ 374835   84994 david_m+  3-13:38:21 node /home/david_master/.hermes/lsp/bin/bash-language-server start
+ 702135   84994 david_m+    15:34:15 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
+ 746759   84994 david_m+    06:56:40 node /home/david_master/.hermes/lsp/bin/pyright-langserver --stdio
+     35       2 root      7-00:54:44 [oom_reaper]
+ 366907       1 root      3-14:59:07 /usr/libexec/packagekitd
+  59208       1 root      6-06:52:14 /usr/libexec/polkitd --no-debug
+  84473       1 postgres  6-00:49:55 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+  84475   84473 postgres  6-00:49:55 postgres: 14/main: checkpointer 
+  84476   84473 postgres  6-00:49:55 postgres: 14/main: background writer 
+  84477   84473 postgres  6-00:49:55 postgres: 14/main: walwriter 
+  84478   84473 postgres  6-00:49:55 postgres: 14/main: autovacuum launcher 
+  84479   84473 postgres  6-00:49:55 postgres: 14/main: stats collector 
+  84480   84473 postgres  6-00:49:55 postgres: 14/main: logical replication launcher 
+ 787799  787693 david_m+       00:00 ps -eo pid,ppid,user,etime,cmd --sort=cmd
+  84946       1 david_m+  6-00:47:57 .venv/bin/python cli.py serve
+ 527788  527787 david_m+  2-04:27:02 .venv/bin/python cli.py web --port 8808
+ 692893       1 david_m+    17:06:46 .venv/bin/python /home/david_master/lana-research/scripts/server.py --port 8811
+  81208   81206 david_m+  6-00:57:28 /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json
+ 479243       1 david_m+  2-14:52:47 /usr/bin/python3 -m agent2telegram run
+ 752180     781 david_m+    06:38:09 /usr/bin/python3 -m agentsmon dashboard
+    713       1 root      7-00:54:22 /usr/sbin/qemu-ga
+    273       2 root      7-00:54:40 [raid5wq]
+      3       2 root      7-00:54:44 [rcu_gp]
+      4       2 root      7-00:54:44 [rcu_par_gp]
+     14       2 root      7-00:54:44 [rcu_sched]
+     11       2 root      7-00:54:44 [rcu_tasks_rude_]
+     12       2 root      7-00:54:44 [rcu_tasks_trace]
+    714       1 syslog    7-00:54:22 /usr/sbin/rsyslogd -n -iNONE
+    105       2 root      7-00:54:43 [scsi_eh_0]
+    107       2 root      7-00:54:43 [scsi_eh_1]
+    181       2 root      7-00:54:43 [scsi_eh_2]
+    106       2 root      7-00:54:43 [scsi_tmf_0]
+    108       2 root      7-00:54:43 [scsi_tmf_1]
+    182       2 root      7-00:54:43 [scsi_tmf_2]
+    920     855 david_m+  7-00:54:21 -sh
+    965     855 david_m+  7-00:54:20 -sh
+  76222     855 david_m+  6-01:36:52 -sh
+  81206     855 david_m+  6-00:57:28 sh -c AGENT2TELEGRAM_CONFIG=/home/david_master/.config/agent2telegram/david-claude.json PYTHONPATH=/home/david_master/.agent2telegram-src /usr/bin/python3 -m agent2telegram run --config /home/david_master/.config/agent2telegram/david-claude.json >> /home/david_master/.local/state/agent2telegram/david-claude/run.log 2>&1
+ 478406     855 david_m+  2-14:55:05 -sh
+ 527787  527786 david_m+  2-04:27:02 sh -c set -a; . ./.env; set +a; WEB_HOST=0.0.0.0 WEB_PORT=8808 .venv/bin/python cli.py web --port 8808 >> /home/david_master/humanagentwiki/web-8808.log 2>&1
+      5       2 root      7-00:54:44 [slub_flushwq]
+ 675406       1 root        20:44:11 /snap/snapd/current/usr/lib/snapd/snapd
+    758       1 root      7-00:54:22 sshd: /usr/sbin/sshd -D [listener] 1 of 10-100 startups
+ 787679     758 root           00:07 sshd: unknown [priv]
+ 787680  787679 sshd           00:07 sshd: unknown [net]
+      1       0 root      7-00:54:44 /sbin/init
+    781       1 david_m+  7-00:54:22 /lib/systemd/systemd --user
+  76028       1 root      6-01:38:17 /lib/systemd/systemd --user
+    396       1 root      7-00:54:39 /lib/systemd/systemd-journald
+    720       1 root      7-00:54:22 /lib/systemd/systemd-logind
+    663       1 systemd+  7-00:54:36 /lib/systemd/systemd-networkd
+    665       1 systemd+  7-00:54:36 /lib/systemd/systemd-resolved
+    563       1 systemd+  7-00:54:38 /lib/systemd/systemd-timesyncd
+    432       1 root      7-00:54:39 /lib/systemd/systemd-udevd
+    855       1 david_m+  7-00:54:21 /usr/bin/tmux new-session -d -s David - Master -c /home/david_master
+     89       2 root      7-00:54:44 [tpm_dev_wq]
+    777       1 root      7-00:54:22 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+    110       2 root      7-00:54:43 [vfio-irqfd-clea]
+     94       2 root      7-00:54:44 [watchdogd]
+     36       2 root      7-00:54:44 [writeback]
+    128       2 root      7-00:54:43 [zswap-shrink]

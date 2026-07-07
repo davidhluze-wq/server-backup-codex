@@ -667,6 +667,7 @@ snapshot/.hermes/skills/software-development/spike/SKILL.md
 snapshot/.hermes/skills/software-development/systematic-debugging/SKILL.md
 snapshot/.hermes/skills/software-development/test-driven-development/SKILL.md
 snapshot/.hermes/skills/yuanbao/SKILL.md
+snapshot/.local/state/agentsmon/automatic_runs.json
 snapshot/home-instructions/.hermes.md
 snapshot/home-instructions/AGENTS.md
 snapshot/home-instructions/CLAUDE.md

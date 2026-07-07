@@ -14,3 +14,4 @@ When the user corrects you, you discover a mistake, a tool/process fails, or you
 - If `execute_code` is blocked by approval/cron trust policy, switch to explicit read/write/patch/terminal tools instead of retrying the same helper.
 - Hermes Architect must ingest `/home/david_master/.hermes/LESSONS.md` as an optimization-idea backlog and convert recurring lessons into propose-only improvements.
 - If `web_extract` reports the configured backend is search-only, verify GitHub/pages via `git ls-remote`, `gh`, `curl`, or browser instead of retrying `web_extract`.
+- In shell backup scripts running with `set -u`, define new path variables explicitly before use and run `bash -n` plus a real dry/run check after edits.

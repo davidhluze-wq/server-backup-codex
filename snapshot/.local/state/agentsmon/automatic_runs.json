@@ -1,0 +1,26 @@
+{
+  "runs": [
+    {
+      "id": "commodity-etl-monthly",
+      "name": "Commodity ETL — Power BI CSV refresh",
+      "source": "crontab",
+      "schedule": "0 6 1 * *",
+      "command": "/usr/bin/python3 /home/david_master/commodity-etl/build_commodities.py >> /home/david_master/commodity-etl/etl.log 2>&1",
+      "description": "Každý měsíc obnoví veřejný komoditní CSV/JSON feed pro Power BI na http://38.19.198.4:8765/commodities.csv a /commodities.json. Stahuje ČNB CZK/EUR, Alpha Vantage komodity, World Bank Pink Sheet proxy řady a latest BDI/FBX signály. Stop pozastaví budoucí měsíční cron běhy; Start je znovu zapne.",
+      "url": "http://38.19.198.4:8765/commodities.csv",
+      "meta_url": "http://38.19.198.4:8765/commodities.json",
+      "log": "/home/david_master/commodity-etl/etl.log"
+    },
+    {
+      "id": "server-agent-env-backup-weekly",
+      "name": "Server Agent Env Backup — GitHub sanitized snapshot",
+      "source": "crontab",
+      "schedule": "15 3 * * 0",
+      "command": "/home/david_master/.local/bin/weekly-server-agent-backup.sh",
+      "description": "Každou neděli v 03:15 UTC rebuildne sanitizovanou zálohu agentího prostředí do /home/david_master/server-agent-env-backup, provede secret scan, commitne změny a pushne je na GitHub branch server-agent-env-backup-20260706 v repozitáři davidhluze-wq/server-backup-codex. Stop zakomentuje crontab řádek; Start ho znovu aktivuje.",
+      "url": "https://github.com/davidhluze-wq/server-backup-codex/tree/server-agent-env-backup-20260706",
+      "meta_url": "https://github.com/davidhluze-wq/server-backup-codex/commits/server-agent-env-backup-20260706",
+      "log": "/home/david_master/.local/state/server-agent-env-backup/weekly-backup.log"
+    }
+  ]
+}
