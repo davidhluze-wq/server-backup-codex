@@ -17,7 +17,15 @@
       "Bash(grep -nE \"sk-[a-zA-Z0-9]{20}|api[_-]?key\\\\s*[:=]\\\\s*['\\\\\"]?[A-Za-z0-9]{20,}|BEGIN.*PRIVATE KEY\" /home/david_master/.hermes/skills/autonomous-ai-agents/hermes-agent/references/native-mcp.md)",
       "Bash(git commit -q -m 'Initial snapshot: Hermes config, profiles, skills, cron jobs, orchestration prompts/scripts *)",
       "Bash(timeout 180 /home/david_master/.hermes/hermes-agent/hermes -p deepresearch-claude-opus chat -Q --max-turns 1 -q \"Reply with exactly: OK\")",
-      "Bash(timeout 240 /home/david_master/.local/bin/hermes -p deepresearch-claude-opus chat -Q --max-turns 1 -q \"Reply with exactly: OK\")"
-    ]
+      "Bash(timeout 240 /home/david_master/.local/bin/hermes -p deepresearch-claude-opus chat -Q --max-turns 1 -q \"Reply with exactly: OK\")",
+      "Bash(python3 -c ' *)",
+      "Bash(tmux capture-pane *)",
+      "Bash(grep -v '^$')",
+      "Bash(python3 *)",
+      "Bash(curl -s --max-time 5 ifconfig.me)",
+      "Bash(sudo grep -iE \"^\\\\s*#?\\\\s*\\(Port|PubkeyAuthentication|PasswordAuthentication\\)\" /etc/ssh/sshd_config)",
+      "Read(//etc/ssh/**)"
+    ],
+    "defaultMode": "bypassPermissions"
   }
 }

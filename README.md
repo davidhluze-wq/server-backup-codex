@@ -11,6 +11,7 @@ It is intended for configuration recovery, review, and migration planning.
 - Codex configuration, rules, and local skill metadata.
 - Claude settings that are safe to store, with sensitive values redacted.
 - Hermes orchestration configuration, crews, prompts, scripts, profiles, and audit workflows.
+- Full LANA dashboard source, database structure, deployment templates, and VPS activation guide under `snapshot/projects/lana-research/`.
 - Local source snapshots for Agent2Telegram, AgentsMonitoring, and HumanAgentWiki without their `.git` directories.
 - System inventory files:
   - `system/tmux-sessions.txt`
@@ -28,6 +29,7 @@ It is intended for configuration recovery, review, and migration planning.
 - `.env` backup files and local secret files.
 - Runtime databases, logs, caches, sessions, history files, lock files, PID files, virtualenvs, and `node_modules`.
 - Large generated state that is not needed to understand or rebuild the setup.
+- LANA live research records, signals, trades, P&L data, `.auth`, `.env`, and operational logs.
 
 ## Restore Notes
 
@@ -39,3 +41,5 @@ Do not blindly copy this backup over a live server. Use it as a reference:
 4. Restart services only after checking paths, ports, tokens, and tmux/session names.
 
 The backup intentionally does not contain live secrets, so it is not a one-command restore archive.
+
+For LANA installation on a separate VPS, start with `snapshot/projects/lana-research/docs/ACTIVATE_ON_VPS.md`.

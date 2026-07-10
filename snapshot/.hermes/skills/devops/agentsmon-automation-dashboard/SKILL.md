@@ -156,6 +156,8 @@ Before reporting completion:
 - [ ] Stop/Start round-trip works on a safe target or a test instance, and leaves the job active if it should remain active.
 - [ ] Dashboard process was restarted/reloaded so the UI uses new code.
 - [ ] Public data endpoints that share the dashboard port still work.
+- [ ] If the automation is itself a backup/restore/sync job, make sure the agentsmon registry (`~/.local/state/agentsmon/automatic_runs.json`) and any updated backup script are included in the backup payload.
+- [ ] If you start a temporary test dashboard/process for UI verification, kill it before finishing and expect delayed watch-pattern notifications; verify only the production port remains listening.
 
 Useful local checks:
 
@@ -183,3 +185,4 @@ curl -sS http://127.0.0.1:8765/commodities.json | python3 -m json.tool | head
 ## References
 
 - `references/2026-07-07-agentsmon-automatic-runs.md` — implementation details from the commodity ETL dashboard integration session.
+- `references/2026-07-07-backup-automation-registration.md` — registering the GitHub backup automation in agentsmon and ensuring the registry itself is included in backup payloads.

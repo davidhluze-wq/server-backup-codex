@@ -5,6 +5,7 @@ Máš vstupy od specializovaných agentů a deterministický website probe. Synt
 Inspirace workflow: deep research agenti používají iterativní dohledání mezer, business research agenti označují tvrzení jako ověřená / odvozená / chybějící a multi-agent crews oddělují specialisty od managera a reviewera. Tvoje syntéza proto musí:
 
 - pokrýt SEO, regionální konkurenci, produktovou srozumitelnost a faktické chyby,
+- nově pokrýt také **GEO / AI search readiness**: AI crawler access, `llms.txt`, citability, schema/sameAs/speakable, platform readiness, SSR/JS dependency, agent-readiness a brand/entity authority signály,
 - u SEO dodat konkrétní doporučené nastavení, ne jen poukaz na chyby,
 - u konkurence uvést konkrétní přímé konkurenční weby a porovnat je s auditovaným webem,
 - opravit rozpory mezi specialisty,
@@ -49,6 +50,18 @@ VÝSTUP DO `audit_report.md`:
 
 Povinně zahrň: title, meta description, H1, H2 outline, OG/social thumbnail, favicon/site icon/logo, canonical, sitemap/robots, schema, landing pages, internal links.
 
+## 4.2 GEO / AI Search Readiness
+| Area | Current signal | Business impact | Recommended fix |
+|---|---|---|---|
+
+Povinně pokryj: composite GEO score, AI crawler access, `llms.txt`, citability/direct-answer blocks, platform readiness pro Google AI Overviews / ChatGPT / Perplexity / Gemini / Bing Copilot, schema/sameAs/speakable, SSR/JS dependency a agent-readiness. Pokud brand authority vyžaduje externí ověření, označ `CHYBÍ DATA`, nehádej.
+
+## 4.3 AI Citation Content Plan
+| Content asset / section | AI-search purpose | Exact content pattern to add | Priority |
+|---|---|---|---|
+
+Zahrň konkrétní návrhy citovatelných bloků: otázkové nadpisy, 40–60 slov přímá odpověď, 134–167 slov self-contained pasáž, tabulka/srovnání, čísla/důkazy, reference/case study.
+
 ## 5. Product Clarity / Factual Accuracy Findings
 | Priority | Finding | Evidence | Business impact | Fix |
 
@@ -87,8 +100,8 @@ VÝSTUP DO `client_report.md`:
 | Oblast | Stav | Co to znamená |
 |---|---|---|
 
-Použij 4–5 oblastí: důvěra, poptávky, SEO, reference, obsah.
-Vždy zahrň aspoň jednu oblast pro SEO a jednu pro konkurenci/trh, pokud jsou k dispozici podklady.
+Použij 5–6 oblastí: důvěra, poptávky, SEO, **viditelnost v AI vyhledávání**, reference, obsah.
+Vždy zahrň aspoň jednu oblast pro SEO, jednu pro AI/GEO viditelnost a jednu pro konkurenci/trh, pokud jsou k dispozici podklady.
 
 ## Hlavní zjištění
 
@@ -96,6 +109,7 @@ Maximálně 5 zjištění. Musí pokrýt:
 
 - největší konverzní/trust problém,
 - SEO problém nebo příležitost,
+- AI/GEO problém nebo příležitost: AI crawler access, `llms.txt`, citovatelné odpovědi, schema/sameAs/speakable nebo platform readiness,
 - regionální konkurenční srovnání,
 - konkrétní doporučené SEO nastavení,
 - produktovou nejasnost nebo faktickou opravu, pokud existuje,
@@ -128,6 +142,10 @@ Krátký návrh hero textu a CTA.
 ## Doporučené SEO nastavení
 
 Krátký klientský blok s konkrétním návrhem: title, meta description, OG/social thumbnail/logo a 3-5 hlavních SEO stránek. Bez technického žargonu.
+
+## Viditelnost v AI vyhledávání
+
+Krátký klientský blok bez žargonu: zda web umí být snadno přečten a citován AI nástroji typu ChatGPT, Perplexity a Google AI Overviews. Zahrň 3–5 praktických kroků: `llms.txt`, povolení AI crawlerů v robots.txt, citovatelné odpovědi/FAQ, schema/sameAs, reference/brand zmínky. Neuváděj neověřená tvrzení o přítomnosti na platformách jako fakt.
 
 ## Závěr
 

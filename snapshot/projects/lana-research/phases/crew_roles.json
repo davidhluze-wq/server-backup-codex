@@ -1,0 +1,11 @@
+{
+  "roles": [
+    {"n": 1, "key": "strategist", "name": "Stratég / Portfolio Lead", "model": "opus", "mandate": "Určuje zaměření a alokaci; vybírá trhy dle blueprintu a preferovaného směru."},
+    {"n": 2, "key": "research", "name": "Fundamentální analytik", "model": "worker-gpt-mini", "mandate": "Sestaví thesis z RAG evidence (findings/sources) k danému trhu."},
+    {"n": 3, "key": "quant", "name": "Kvant / Kalibrace", "model": "worker-gpt-mini", "mandate": "Odhad pravděpodobnosti a edge vs. tržní cena; kalibrace."},
+    {"n": 4, "key": "sentiment", "name": "Sentiment / News", "model": "worker-gpt-mini", "mandate": "Tržní sentiment a krátkodobé katalyzátory."},
+    {"n": 5, "key": "risk", "name": "Risk manažer", "model": "worker-sonnet", "mandate": "Limity, sizing (frakční Kelly), drawdown, kill-switch. Ctí approval_policy."},
+    {"n": 6, "key": "execution", "name": "Exekuce", "model": "deterministický", "mandate": "Sestaví přesný příkaz; v demu míří na demo účet, nikdy na reálné operace s účtem."},
+    {"n": 7, "key": "reviewer", "name": "Reviewer / Judge", "model": "opus", "mandate": "Finální kontrola před odesláním + post-trade audit."}
+  ]
+}

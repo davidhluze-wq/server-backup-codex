@@ -21,7 +21,8 @@ PORT_CHECKS=(
 )
 # pgrep pattern:popisek  (proces musi bezet)
 PROC_CHECKS=(
-  "hermes_cli.main gateway:hermes-gateway"
+  # Hermes entrypoint changed from hermes_cli.main to the console command.
+  "hermes gateway run:hermes-gateway"
   "agent2telegram run:telegram-bridge"
 )
 

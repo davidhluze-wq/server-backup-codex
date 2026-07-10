@@ -8,6 +8,7 @@ AGENTSMON_STATE="$HOME_DIR/.local/state/agentsmon"
 BRANCH="server-agent-env-backup-20260706"
 REMOTE_URL="git@github.com:davidhluze-wq/server-backup-codex.git"
 SSH_KEY="$HOME_DIR/.ssh/server_backup_codex_ed25519"
+# Manual GitHub verification must use this same deploy key via GIT_SSH_COMMAND.
 STAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 mkdir -p "$LOG_DIR"
@@ -27,6 +28,7 @@ mkdir -p \
   snapshot/.hermes \
   snapshot/home-instructions \
   snapshot/.local/state/agentsmon \
+  snapshot/projects/lana-research \
   snapshot/repos \
   system
 
@@ -166,6 +168,15 @@ for repo in "$HOME_DIR/.agent2telegram-src" "$HOME_DIR/.agentsmon-src" "$HOME_DI
   fi
 done
 
+# LANA dashboard source and deployment templates. Keep examples for migration,
+# but never copy live authentication, environment files, logs, or research data.
+if [ -d "$HOME_DIR/lana-research" ]; then
+  rsync -a "$HOME_DIR/lana-research/" "$BACKUP_DIR/snapshot/projects/lana-research/" \
+    --exclude='.git' --exclude='.env' --exclude='.auth' --exclude='*.log' --exclude='*.lock' \
+    --exclude='__pycache__' --exclude='*.pyc' --exclude='node_modules' --exclude='venv' --exclude='.venv' \
+    --exclude='*.sqlite*' --exclude='*.db' --exclude='video_prepis_*.txt'
+fi
+
 tmux ls > system/tmux-sessions.txt 2>&1 || true
 cp "$0" system/weekly-server-agent-backup.sh
 chmod 600 system/weekly-server-agent-backup.sh
@@ -205,7 +216,7 @@ done < <(rg -l --hidden -I -S 'ghp_x{10,}|sk-x{10,}' "$BACKUP_DIR" --glob '!.git
 
 find "$BACKUP_DIR" -type f -not -path '*/.git/*' | sed "s#^$BACKUP_DIR/##" | sort > system/file-list.txt
 
-if rg -n --hidden -S '\b[0-9]{7,12}:[A-Za-z0-9_-]{30,}\b|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|ya29\.[A-Za-z0-9_-]+|AIza[A-Za-z0-9_-]{20,}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY' "$BACKUP_DIR" --glob '!.git/**'; then
+if rg -n --hidden -S '\b[0-9]{7,12}:[A-Za-z0-9_-]{30,}\b|\bsk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|ya29\.[A-Za-z0-9_-]+|AIza[A-Za-z0-9_-]{20,}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY' "$BACKUP_DIR" --glob '!.git/**'; then
   echo "Secret scan found a possible live secret. Aborting commit/push."
   exit 10
 fi

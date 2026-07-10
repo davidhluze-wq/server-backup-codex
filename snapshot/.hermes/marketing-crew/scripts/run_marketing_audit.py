@@ -18,7 +18,7 @@ RUNS = BASE / "runs"
 SCRIPTS = BASE / "scripts"
 INDEX_JSONL = BASE / "index.jsonl"
 INDEX_MD = BASE / "index.md"
-WORKFLOW_VERSION = "0.3.0-caveman-internal-efficiency"
+WORKFLOW_VERSION = "0.4.0-geo-ai-search-enriched"
 
 ROLE_FILES = {
     "website_audit": "website-auditor.md",
@@ -118,7 +118,7 @@ def read_global_lessons(max_chars: int = 5000) -> str:
         return ""
 
 
-def compact_probe_json(path: Path, max_chars: int = 5000) -> str:
+def compact_probe_json(path: Path, max_chars: int = 9000) -> str:
     """Return a small JSON context so subprocess LLM calls do not hang on huge argv/tool contexts."""
     try:
         data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
@@ -191,11 +191,14 @@ def build_prompt(role: str, run_dir: Path, internal_compression: str = "caveman"
     base = (PROMPTS / ROLE_FILES[role]).read_text(encoding="utf-8")
     rules = (CONFIG / "audit-rules.md").read_text(encoding="utf-8")
     input_txt = (run_dir / "input.md").read_text(encoding="utf-8")
+    geo_notes = BASE / "GEO_SEO_CLAUDE_INSPIRATION_NOTES.md"
     io_contract = """
 # Output contract
 Return ONLY the final Markdown content for your assigned role. Do not call file tools. Do not say you cannot write files; the orchestrator captures your stdout and saves it to the correct file. Be concise, evidence-based, and finish in one response.
 """
     parts = [base, "\n# Global server self-learning / Lessons\n", read_global_lessons(), "\n# Audit rules\n", rules, "\n# User input\n", input_txt, efficiency_contract(role, internal_compression), io_contract]
+    if geo_notes.exists() and role in {"seo_content", "strategy_synthesizer", "quality_review"}:
+        parts += ["\n# GEO/AI-search implementation notes\n", read_limited(geo_notes, max_chars=5000)]
     md_probe = run_dir / OUTPUT_FILES["website_probe"]
     if md_probe.exists():
         parts += [f"\n# {md_probe.name}\n", read_limited(md_probe, max_chars=6000)]
@@ -245,10 +248,12 @@ def deterministic_autofinalize(run_dir: Path, reason: str) -> list[str]:
             "## Konsolidované nálezy\n\n"
             "Níže jsou zachované výstupy dokončených specialistů. Pokud některý specialista selhal, není zde zahrnut jako důkaz.\n"
             + "\n".join(sections)
+            + "\n\n## GEO / AI-search vrstva\n\n"
+            "Pokud je ve website_probe dostupná sekce `GEO / AI Search Scorecard`, musí být použita jako minimální evidence pro AI crawler access, llms.txt, citability, schema/sameAs/speakable, platform readiness a SSR/JS dependency. Brand authority platformy ber jen jako ověřovací backlog, pokud nebyly živě zkontrolované.\n"
             + "\n\n## Doporučený plán nápravy\n\n"
-            "### Krátkodobě\n- Opravit technické/SEO chyby označené ve website probe a website audit.\n- Doplnit jasné CTA, kontaktní cestu a měřitelné konverzní prvky.\n\n"
-            "### Střednědobě\n- Rozšířit landing pages a obsah podle nejbližších relevantních konkurenčních témat.\n- Doplnit reference, FAQ, lokální SEO a strukturovaná data.\n\n"
-            "### Dlouhodobě\n- Pravidelně opakovat audit, sledovat konkurenci, měřit konverze a iterovat nabídku podle dat.\n",
+            "### Krátkodobě\n- Opravit technické/SEO/GEO chyby označené ve website probe a website audit.\n- Doplnit jasné CTA, kontaktní cestu a měřitelné konverzní prvky.\n- Přidat nebo opravit robots.txt/llms.txt/schema podle GEO sekce.\n\n"
+            "### Střednědobě\n- Rozšířit landing pages a obsah podle nejbližších relevantních konkurenčních témat.\n- Doplnit reference, FAQ, lokální SEO, citovatelné answer blocks a strukturovaná data.\n\n"
+            "### Dlouhodobě\n- Pravidelně opakovat audit, sledovat konkurenci i AI-search platform readiness, měřit konverze a iterovat nabídku podle dat.\n",
             encoding="utf-8",
         )
         created.append("audit_report.md")

@@ -1,0 +1,9 @@
+{
+  "phases": [
+    {"n": 1, "title": "RAG + dashboard", "desc": "Znalostní báze + tahle stránka.", "status": "done", "playbook": null},
+    {"n": 2, "title": "Research crew", "desc": "Autonomní Researcher zpracovává frontu témat a plní RAG.", "status": "running", "playbook": null},
+    {"n": 3, "title": "Signály, obchody & P&L (paper)", "desc": "Demo trading vrstva: signály z RAG, paper obchody, P&L dashboard.", "status": "ready", "playbook": "phase3-trades-pnl-dashboard.md"},
+    {"n": 4, "title": "Agenti v DEMO režimu", "desc": "Crew obchoduje autonomně na demo účtech (reálná data, demo peníze). Mezistupeň mezi paper a naostro.", "status": "planned", "playbook": "phase4-demo-mode.md"},
+    {"n": 5, "title": "Naostro (human-approved → volitelně auto)", "desc": "Napojení účtů, ~5 agentů. Schválení nejdřív povinné; lze vypnout s pojistkami (limit obnosu/% portfolia, zákaz operací s účtem) — schvaluje David.", "status": "planned", "playbook": "phase5-live-trading.md"}
+  ]
+}

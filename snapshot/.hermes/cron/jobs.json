@@ -22,17 +22,17 @@
       "schedule_display": "0 3 * * *",
       "repeat": {
         "times": null,
-        "completed": 8
+        "completed": 11
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:25.066713+00:00",
-      "next_run_at": "2026-07-08T03:00:00+00:00",
-      "last_run_at": "2026-07-07T03:06:02.814467+00:00",
-      "last_status": "ok",
-      "last_error": null,
+      "next_run_at": "2026-07-11T03:00:00+00:00",
+      "last_run_at": "2026-07-10T03:00:39.882390+00:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'gpt-5.5' -> 'gpt-5.6-terra'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=13c0fe7b62a0 provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
       "last_delivery_error": null,
       "deliver": "local",
       "origin": {
@@ -72,15 +72,15 @@
       "schedule_display": "30 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 7
+        "completed": 10
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:36.316517+00:00",
-      "next_run_at": "2026-07-08T07:30:00+00:00",
-      "last_run_at": "2026-07-07T07:30:40.542647+00:00",
+      "next_run_at": "2026-07-11T07:30:00+00:00",
+      "last_run_at": "2026-07-10T07:30:58.375819+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -118,15 +118,15 @@
       "schedule_display": "45 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 7
+        "completed": 10
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:37.328128+00:00",
-      "next_run_at": "2026-07-08T07:45:00+00:00",
-      "last_run_at": "2026-07-07T07:45:40.864315+00:00",
+      "next_run_at": "2026-07-11T07:45:00+00:00",
+      "last_run_at": "2026-07-10T07:45:58.408744+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -164,15 +164,15 @@
       "schedule_display": "*/30 * * * *",
       "repeat": {
         "times": null,
-        "completed": 292
+        "completed": 414
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T21:19:31.812012+00:00",
-      "next_run_at": "2026-07-07T23:00:00+00:00",
-      "last_run_at": "2026-07-07T22:32:40.624564+00:00",
+      "next_run_at": "2026-07-10T12:00:00+00:00",
+      "last_run_at": "2026-07-10T11:31:10.175091+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -210,15 +210,15 @@
       "schedule_display": "0 8,18 * * *",
       "repeat": {
         "times": null,
-        "completed": 12
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T21:19:32.824507+00:00",
-      "next_run_at": "2026-07-08T08:00:00+00:00",
-      "last_run_at": "2026-07-07T18:01:15.554105+00:00",
+      "next_run_at": "2026-07-10T18:00:00+00:00",
+      "last_run_at": "2026-07-10T08:01:18.164956+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -256,15 +256,15 @@
       "schedule_display": "0 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 6
+        "completed": 9
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T22:01:18.498000+00:00",
-      "next_run_at": "2026-07-08T05:00:00+00:00",
-      "last_run_at": "2026-07-07T05:02:47.526589+00:00",
+      "next_run_at": "2026-07-11T05:00:00+00:00",
+      "last_run_at": "2026-07-10T05:02:49.780984+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -302,15 +302,15 @@
       "schedule_display": "30 4 * * *",
       "repeat": {
         "times": null,
-        "completed": 3
+        "completed": 6
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-04T14:06:15.685641+00:00",
-      "next_run_at": "2026-07-08T04:30:00+00:00",
-      "last_run_at": "2026-07-07T04:30:40.104378+00:00",
+      "next_run_at": "2026-07-11T04:30:00+00:00",
+      "last_run_at": "2026-07-10T04:30:57.431530+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -348,15 +348,15 @@
       "schedule_display": "0 6 */3 * *",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 2
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-06T15:44:00.630806+00:00",
-      "next_run_at": "2026-07-10T06:00:00+00:00",
-      "last_run_at": "2026-07-07T06:01:47.386411+00:00",
+      "next_run_at": "2026-07-13T06:00:00+00:00",
+      "last_run_at": "2026-07-10T06:02:48.721556+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -367,5 +367,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-07-07T22:51:53.620139+00:00"
+  "updated_at": "2026-07-10T11:31:10.175979+00:00"
 }

@@ -5,10 +5,11 @@ Zkontroluj celý marketing audit: website_audit.md, seo_content.md, competitor_m
 Proveď také druhou optimalizační smyčku:
 
 1. Zkontroluj, zda audit pokrývá SEO, regionální konkurenci, produktovou srozumitelnost a faktické chyby.
-2. Najdi tvrzení v klientském reportu, která jsou nepravdivá nebo neověřená.
-3. Porovnej důležitá tvrzení s website_probe a specialistickými výstupy.
-4. Pokud report tvrdí, že něco chybí, ověř, zda to na webu skutečně není. Typicky: kontakty, CTA, reference, ceník, region, služba.
-5. Vrať konkrétní opravy, které má manager zapracovat.
+2. Zkontroluj, zda audit nově pokrývá GEO / AI search readiness: AI crawler access, `llms.txt`, citability, platform readiness, schema/sameAs/speakable, SSR/JS dependency a agent-readiness.
+3. Najdi tvrzení v klientském reportu, která jsou nepravdivá nebo neověřená.
+4. Porovnej důležitá tvrzení s website_probe a specialistickými výstupy.
+5. Pokud report tvrdí, že něco chybí, ověř, zda to na webu skutečně není. Typicky: kontakty, CTA, reference, ceník, region, služba, robots/llms/schema.
+6. Vrať konkrétní opravy, které má manager zapracovat.
 
 Klientský report musí být:
 
@@ -40,6 +41,9 @@ Zvlášť uveď, jestli chybí:
 - produktové nejasnosti pro zákazníka,
 - faktická korekce falešných tvrzení,
 - jasný klientský akční plán.
+- GEO / AI-search sekce,
+- `llms.txt` / AI crawler access / schema / citability pokrytí,
+- bezpečné označení `CHYBÍ DATA` u brand authority platforem, které nebyly živě ověřeny.
 
 ## Overclaims / Unsupported Claims
 
@@ -72,6 +76,12 @@ Zhodnoť:
 | No internal technical language | | |
 | Max two-page client version | | |
 | Drive links/export ready | | |
+| GEO / AI-search readiness included | | |
+| AI crawler access checked | | |
+| llms.txt checked or recommended | | |
+| Citability/actionable answer-block plan included | | |
+| Schema/sameAs/speakable gaps included | | |
+| Platform readiness included safely | | |
 
 ## Questions For Human Reviewer
 

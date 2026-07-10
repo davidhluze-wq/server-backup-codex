@@ -1,0 +1,2 @@
+# Run the research pipeline nightly. Keep the initial configuration in paper/research mode.
+0 0 * * * /home/lana/lana-research/scripts/nightly_lana.sh

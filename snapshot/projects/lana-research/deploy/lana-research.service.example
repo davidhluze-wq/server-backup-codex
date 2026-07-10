@@ -1,0 +1,21 @@
+[Unit]
+Description=LANA Research Dashboard
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lana
+Group=lana
+WorkingDirectory=/home/lana/lana-research
+EnvironmentFile=/etc/lana/lana.env
+ExecStart=/home/lana/lana-research/.venv/bin/python /home/lana/lana-research/scripts/server.py --host 127.0.0.1 --port 8811
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/home/lana/lana-research
+
+[Install]
+WantedBy=multi-user.target

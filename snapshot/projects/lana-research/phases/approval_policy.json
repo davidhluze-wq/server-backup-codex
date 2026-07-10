@@ -1,0 +1,10 @@
+{
+  "approval_required": true,
+  "auto_approve_below_amount": null,
+  "auto_approve_below_pct": null,
+  "max_daily_loss": null,
+  "max_position": null,
+  "account_ops_forbidden": true,
+  "disabled_by": null,
+  "disabled_at": null
+}

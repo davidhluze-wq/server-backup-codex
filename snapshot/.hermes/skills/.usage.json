@@ -3,14 +3,14 @@
     "archived_at": null,
     "created_at": "2026-07-07T16:08:18.735336+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-07T16:23:20.846016+00:00",
-    "last_used_at": "2026-07-07T16:22:48.165592+00:00",
-    "last_viewed_at": "2026-07-07T16:22:48.161711+00:00",
-    "patch_count": 3,
+    "last_patched_at": "2026-07-07T23:00:01.384229+00:00",
+    "last_used_at": "2026-07-07T22:59:28.825919+00:00",
+    "last_viewed_at": "2026-07-07T22:59:28.821382+00:00",
+    "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "ai-news-telegram-monitor": {
     "archived_at": null,
@@ -394,13 +394,13 @@
     "created_at": "2026-07-07T22:10:32.665774+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-07-07T22:55:07.297042+00:00",
-    "last_viewed_at": "2026-07-07T22:55:07.292365+00:00",
+    "last_used_at": "2026-07-07T23:55:09.043694+00:00",
+    "last_viewed_at": "2026-07-07T23:55:09.039301+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "google-workspace": {
     "archived_at": null,
@@ -433,13 +433,13 @@
     "created_at": "2026-06-30T21:39:55.505389+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-07-07T22:50:17.879714+00:00",
-    "last_viewed_at": "2026-07-07T22:50:17.872739+00:00",
+    "last_used_at": "2026-07-10T11:50:32.735443+00:00",
+    "last_viewed_at": "2026-07-10T11:50:32.726057+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 14,
-    "view_count": 14
+    "use_count": 15,
+    "view_count": 15
   },
   "hermes-agent-skill-authoring": {
     "archived_at": null,
@@ -576,13 +576,13 @@
     "created_at": "2026-07-05T08:34:41.611469+00:00",
     "created_by": "agent",
     "last_patched_at": null,
-    "last_used_at": null,
-    "last_viewed_at": null,
+    "last_used_at": "2026-07-10T05:54:16.110083+00:00",
+    "last_viewed_at": "2026-07-10T05:54:16.103229+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 0,
-    "view_count": 0
+    "use_count": 1,
+    "view_count": 1
   },
   "llama-cpp": {
     "archived_at": null,
@@ -654,13 +654,13 @@
     "created_at": "2026-07-03T08:12:21.393461+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-07T07:28:56.067418+00:00",
-    "last_used_at": "2026-07-04T14:40:36.787507+00:00",
-    "last_viewed_at": "2026-07-04T14:40:36.782213+00:00",
+    "last_used_at": "2026-07-07T23:55:07.969628+00:00",
+    "last_viewed_at": "2026-07-07T23:55:07.962594+00:00",
     "patch_count": 5,
     "pinned": false,
     "state": "active",
-    "use_count": 4,
-    "view_count": 4
+    "use_count": 5,
+    "view_count": 5
   },
   "nano-pdf": {
     "archived_at": null,
@@ -901,13 +901,13 @@
     "created_at": "2026-07-01T21:52:32.425752+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-04T09:29:00.972849+00:00",
-    "last_used_at": "2026-07-04T09:14:44.787127+00:00",
-    "last_viewed_at": "2026-07-04T09:14:44.778651+00:00",
+    "last_used_at": "2026-07-10T11:50:33.827930+00:00",
+    "last_viewed_at": "2026-07-10T11:50:33.823739+00:00",
     "patch_count": 4,
     "pinned": false,
     "state": "active",
-    "use_count": 2,
-    "view_count": 2
+    "use_count": 3,
+    "view_count": 3
   },
   "segment-anything-model": {
     "archived_at": null,
@@ -1005,13 +1005,13 @@
     "created_at": "2026-07-04T14:00:58.554630+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-07-04T14:00:58.557593+00:00",
-    "last_viewed_at": "2026-07-04T14:00:58.554666+00:00",
+    "last_used_at": "2026-07-07T23:55:10.193101+00:00",
+    "last_viewed_at": "2026-07-07T23:55:10.187677+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "teams-meeting-pipeline": {
     "archived_at": null,
