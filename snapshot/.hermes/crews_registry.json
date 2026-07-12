@@ -491,6 +491,65 @@
           "doc": "hermes-architect/prompts/trend-scout.md"
         }
       ]
+    },
+    {
+      "name": "meeting-intel",
+      "host": "vps",
+      "dir": "meeting-intel",
+      "doc": "meeting-intel/README.md",
+      "description": "Meeting Intelligence: nahrávka → minutes → nápady → koncept (road-plan + Hermes prompt). Dashboard agentsmon → 📝 Meetings; záloha Google Drive; kód na GitHubu.",
+      "modes": [
+        "transcribe",
+        "minutes",
+        "ideas",
+        "concept",
+        "review"
+      ],
+      "runner": "~/meeting-intel/server.py",
+      "roles": [
+        {
+          "role": "transcriber",
+          "profile": "deterministicky",
+          "model": "whisper",
+          "tier": "skript",
+          "doc": "meeting-intel/prompts/transcriber.md"
+        },
+        {
+          "role": "minutes-writer",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "meeting-intel/prompts/minutes-writer.md"
+        },
+        {
+          "role": "idea-distiller",
+          "profile": "worker-gpt-mini",
+          "model": "gpt-5.4-mini",
+          "tier": "levny",
+          "doc": "meeting-intel/prompts/idea-distiller.md"
+        },
+        {
+          "role": "concept-architect",
+          "profile": "worker-sonnet",
+          "model": "sonnet",
+          "tier": "levny",
+          "doc": "meeting-intel/prompts/concept-architect.md"
+        },
+        {
+          "role": "researcher",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "meeting-intel/prompts/researcher.md"
+        },
+        {
+          "role": "reviewer-auditor",
+          "profile": "deepresearch-claude-opus",
+          "model": "opus",
+          "tier": "drahy",
+          "doc": "meeting-intel/prompts/reviewer-auditor.md"
+        }
+      ]
     }
   ],
   "tiers": {

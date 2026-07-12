@@ -24,5 +24,14 @@ When the user corrects you, you discover a mistake, a tool/process fails, or you
 - Treat ElevenLabs TTS and incoming-message transcription as separate capabilities: Hermes requires a configured STT provider (local Whisper, Groq, OpenAI, or Mistral) for Telegram voice input.
 - Verify the server backup remote with its configured deploy key; an unkeyed interactive Git command can fail even though the scheduled backup push is correctly configured.
 - Secret scans for `sk-` API keys must require a word boundary before the prefix, otherwise ordinary hyphenated prose such as `risk-free` can block a sanitized backup.
+- Before attempting transcription of a Telegram voice message, confirm that the bridge downloaded an audio attachment; message delivery alone does not guarantee that media reached the server.
+- On this server, inspect JSON configuration with the standard Python `json` module when `jq` is unavailable instead of assuming a JSON CLI is installed.
+- A configured ElevenLabs key is not sufficient evidence that Telegram voice transcription works; validate it with a non-billing API request and replace it when the provider returns HTTP 401.
 - If a configuration audit needs secret-presence evidence, parse credential-bearing config with a purpose-built script that prints booleans only; never run broad content search over those files.
 - When a patch cannot find its expected text, read the current file and use exact nearby context rather than retrying the stale match.
+- For voice/Telegram health checks, query only status/error metadata; never stream broad bridge logs because they can contain private transcript content.
+- An agent2telegram attach bridge cannot start without its configured tmux session; configure STT first, but defer the bridge launch until the target agent session exists.
+
+## Lessons
+- agentsmon reverse-proxy: proxovaný dashboard musí volat API přes prefix (`/meetings`, `/lana`). Nepoužívej `fetch(u)` s proměnnou (proxy přepisuje jen literál `fetch("/`) — spočítej v JS `BASE = location.pathname.startsWith("/<prefix>")?"/<prefix>":""` a volej `fetch(BASE+u)`.
+- agentsmon do_POST původně neproxoval POST (jen `/api/agent|auto/action`) → tlačítka přes proxy vracela 404; přidán `_proxy_post` + větev v do_POST pro PROXY_BACKENDS (timeout 300s kvůli LLM/deepresearch).

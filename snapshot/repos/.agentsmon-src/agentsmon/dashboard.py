@@ -55,6 +55,7 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head>
     <button id="tabbtn-kanban" data-tab="kanban" class="px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:bg-slate-100">Kanban &amp; Activity</button>
     <span class="ml-auto flex items-center gap-1">
       <a href="/lana" class="px-3 py-1.5 rounded-md text-sm font-medium text-emerald-600 hover:bg-emerald-50">🧠 Lana ↗</a>
+      <a href="/meetings" class="px-3 py-1.5 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-50">📝 Meetings ↗</a>
       <a href="/hermes" class="px-3 py-1.5 rounded-md text-sm font-medium text-sky-600 hover:bg-sky-50">🌐 Hermes ↗</a>
       <a href="#" onclick="window.open('http://'+location.hostname+':8808','_blank');return false;" class="px-3 py-1.5 rounded-md text-sm font-medium text-violet-600 hover:bg-violet-50">📚 HAW ↗</a>
     </span>
@@ -769,6 +770,7 @@ def _doc(rel: str):
 PROXY_BACKENDS = {
     "lana": "http://127.0.0.1:8811",     # Lana Research (vlastni auth = shodny hash)
     "hermes": "http://127.0.0.1:9119",   # Hermes Agent Dashboard (bez auth; SPA + WebSocket)
+    "meetings": "http://127.0.0.1:8812",  # Meeting Intelligence (vlastni auth = shodny hash)
 }
 
 
@@ -816,6 +818,28 @@ def _proxy(prefix, path, auth):
                     .replace(b'"/assets/', b'"' + p + b'/assets/')
                     .replace(b"'/api/", b"'" + p + b"/api/"))
     return data, ctype, status
+
+
+def _proxy_post(prefix, path, auth, body, ctype_in):
+    """Preposle POST k backend dashboardu (tlacitka: research/concept/ingest…). JSON, bez rewrite."""
+    import urllib.request, urllib.error
+    backend = PROXY_BACKENDS.get(prefix)
+    if not backend:
+        return None
+    sub = path[len("/" + prefix):] or "/"
+    if not sub.startswith("/"):
+        sub = "/" + sub
+    req = urllib.request.Request(backend + sub, data=body or b"", method="POST")
+    if auth:
+        req.add_header("Authorization", auth)
+    req.add_header("Content-Type", ctype_in or "application/json")
+    try:
+        r = urllib.request.urlopen(req, timeout=300)  # koncept/deepresearch muze trvat
+        return r.read(), r.headers.get("Content-Type", "application/json"), r.status
+    except urllib.error.HTTPError as e:
+        return (e.read() if hasattr(e, "read") else b""), "application/json", e.code
+    except Exception:
+        return None
 
 
 def _state() -> bytes:
@@ -949,6 +973,19 @@ def serve(host: str, port: int) -> None:
                 return self._denied()
             from urllib.parse import urlparse, parse_qs
             parsed = urlparse(self.path)
+            # Reverse-proxy POST k dashboardum (tlacitka Lana/Meetings: research/concept/ingest…)
+            seg = parsed.path[1:].split("/", 1)[0]
+            if seg in PROXY_BACKENDS:
+                length = int(self.headers.get("Content-Length", 0) or 0)
+                raw = self.rfile.read(length) if length else b""
+                res = _proxy_post(seg, self.path, self.headers.get("Authorization"),
+                                  raw, self.headers.get("Content-Type"))
+                if res is None:
+                    self.send_response(502); self.end_headers(); return
+                data, ctype, status = res
+                self.send_response(status); self.send_header("Content-Type", ctype)
+                self.send_header("Content-Length", str(len(data))); self.end_headers()
+                self.wfile.write(data); return
             if parsed.path not in ("/api/agent/action", "/api/auto/action"):
                 self.send_response(404)
                 self.end_headers()

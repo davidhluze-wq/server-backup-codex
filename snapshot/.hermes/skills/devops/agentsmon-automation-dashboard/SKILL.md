@@ -1,7 +1,7 @@
 ---
 name: agentsmon-automation-dashboard
-description: Register recurring/automatic jobs in the agentsmon dashboard with expandable descriptions, status, and Start/Stop controls.
-version: 1.0.0
+description: Register recurring automations and persistent monitored processes in agentsmon with accurate status and safe restart controls.
+version: 1.1.0
 author: Hermes Agent
 license: MIT
 metadata:
@@ -18,6 +18,7 @@ Typical triggers:
 
 - A new crontab line, Hermes cron job, systemd timer, watcher, ETL refresh, monitor, radar, report, digest, or scheduled data pipeline is created.
 - A recurring job is modified and its dashboard description/status should stay accurate.
+- A persistent Telegram/agent bridge has multiple profiles and needs safe restart monitoring without duplicate processes.
 - The user asks to see automatic runs in agentsmon or control them from the dashboard.
 
 ## Core rule
@@ -145,6 +146,19 @@ Poslední běh / stav
 Akce
 Stop / Start
 ```
+
+## Persistent multi-profile Telegram bridges
+
+Treat an interactive Telegram bridge as a **persistent monitored process**, not a cron-style automatic run. Keep one configuration per bot/profile and do not put raw credentials in dashboard commands or logs.
+
+1. **Audit safely.** Read config only through a purpose-built parser that reports booleans (`elevenlabs_stt_configured=true/false`), never broad-search credential-bearing JSON or transcript logs.
+2. **Check the attach precondition.** An `agent2telegram` bridge in `attach` mode requires its target tmux session to exist. Do not loop-restart a profile whose session is absent; mark it configured/standby and start it only once the session exists.
+3. **Use one idempotent launcher.** Keep a `0700` launcher under `~/.local/bin/` that checks for an existing process per config, checks the target tmux session, uses `umask 077`, and starts missing eligible bridges with `nohup`.
+4. **Register the launcher as the dashboard restart action.** Update the relevant `daemons[]` item in `~/.config/agentsmon/config.json` so its restart command calls the launcher. The restart action must recover the default bridge as well as profile-specific bridges.
+5. **Protect transcript logs.** Bridge logs can contain full private voice transcriptions. Set existing logs to `0600`; create new logs under `umask 077`; inspect only `Attach bridge live`, error, and health metadata during verification.
+6. **Verify each layer.** Confirm config key presence as boolean, `agent2telegram doctor` bot connectivity, active process lines, target-session availability, launcher `bash -n`, JSON parsing of agentsmon config, and a startup metadata line. A live voice canary requires the owner to send a voice note; do not manufacture one or expose transcript text.
+
+See `references/telegram-bridge-multiprofile.md` for a concise implementation and verification pattern.
 
 ## Verification checklist
 

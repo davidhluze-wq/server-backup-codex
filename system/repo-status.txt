@@ -18,4 +18,5 @@
 ?? notes/Guide/
 ?? notes/Quotes/
 ?? notes/lana/
+?? notes/meetings/
 
