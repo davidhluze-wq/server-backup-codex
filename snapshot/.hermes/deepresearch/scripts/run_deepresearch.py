@@ -7,8 +7,11 @@ import datetime as dt
 import json
 import os
 import re
+import shutil
 import subprocess
 import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 BASE = Path.home() / ".hermes" / "deepresearch"
@@ -45,10 +48,11 @@ ROLE_PROFILES = {
     "research_b": os.getenv("HERMES_DR_PROFILE_RESEARCH_B", "deepresearch-claude-opus"),
     "arbitration": os.getenv("HERMES_DR_PROFILE_ARBITRATOR", "deepresearch-claude-opus"),
     "source_audit": os.getenv("HERMES_DR_PROFILE_SOURCE_AUDITOR", "worker-sonnet"),
-    "final_report": os.getenv("HERMES_DR_PROFILE_FINAL_WRITER", "deepresearch-gpt55"),
+    "final_report": os.getenv("HERMES_DR_PROFILE_FINAL_WRITER", "deepresearch-claude-opus"),
     "quality_review": os.getenv("HERMES_DR_PROFILE_QUALITY_REVIEWER", "deepresearch-claude-opus"),
 }
-FALLBACK_PROFILE = os.getenv("HERMES_DEEPRESEARCH_FALLBACK_PROFILE", "deepresearch-gpt55")
+FALLBACK_PROFILE = os.getenv("HERMES_DEEPRESEARCH_FALLBACK_PROFILE", "worker-sonnet")
+FINAL_QUALITY_TIMEOUT = int(os.getenv("HERMES_DEEPRESEARCH_FINAL_QUALITY_TIMEOUT", "300"))
 
 INTERNAL_COMPRESSION_ROLES = {"research_a", "research_b", "arbitration", "source_audit"}
 FINAL_QUALITY_ROLES = {"final_report", "quality_review"}
@@ -123,6 +127,8 @@ def run_one_command(cmd: list[str], timeout: int) -> tuple[int, str, str, float]
         stdout = e.stdout if isinstance(e.stdout, str) else ""
         stderr = f"TIMEOUT after {timeout}s\n{e.stderr or ''}"
         return 124, stdout.strip(), stderr.strip(), round(time.time() - started, 2)
+    except OSError as e:
+        return 127, "", f"EXEC ERROR: {type(e).__name__}: {e}", round(time.time() - started, 2)
 
 
 def run_hermes(role: str, prompt: str, run_dir: Path, timeout: int, toolsets: str) -> dict:
@@ -160,6 +166,46 @@ def save_role_output(run_dir: Path, role: str, result: dict):
     if result.get("returncode") != 0:
         out += f"\n\n---\n\n⚠️ Agent return code: {result.get('returncode')}. See logs/{role}.stderr.txt\n"
     (run_dir / OUTPUT_FILES[role]).write_text(out + "\n", encoding="utf-8")
+
+
+def run_final_writer_with_retry(run_dir: Path, mode: str, internal_compression: str, timeout: int, toolsets: str) -> tuple[dict, int]:
+    """Retry the final writer once as a complete phase after its profile fallback is exhausted."""
+    phase_timeout = min(timeout, FINAL_QUALITY_TIMEOUT)
+    for attempt in range(1, 3):
+        result = run_hermes("final_report", build_prompt("final_report", run_dir, mode, internal_compression), run_dir, phase_timeout, toolsets)
+        save_role_output(run_dir, "final_report", result)
+        if result["returncode"] == 0:
+            return result, attempt
+        if attempt == 1:
+            shutil.copy2(run_dir / OUTPUT_FILES["final_report"], run_dir / "final_report.attempt-1.md")
+            logs = run_dir / "logs"
+            for suffix in ("stderr.txt", "command.json"):
+                source = logs / f"final_report.{suffix}"
+                if source.exists():
+                    shutil.copy2(source, logs / f"final_report.attempt-1.{suffix}")
+    return result, 2
+
+
+def notify_final_failure(run_dir: Path, topic: str, result: dict) -> None:
+    """Best-effort Telegram escalation for failures that survived all automatic retries."""
+    try:
+        config_path = Path.home() / ".config" / "agent2telegram" / "config.json"
+        token = json.loads(config_path.read_text(encoding="utf-8")).get("token")
+        chat_id = os.getenv("HERMES_DEEPRESEARCH_NOTIFY_CHAT_ID", "8629730938")
+        if not token:
+            return
+        message = (
+            "⚠️ Deep Research se nedokončil ani po automatickém opakování finální fáze.\n"
+            f"Téma: {topic[:180]}\n"
+            "Návrh úpravy: prověřit dostupnost Claude a Sonnet profilů nebo snížit rozsah podkladů pro finálního autora.\n"
+            f"Run: {run_dir}\n"
+            f"Poslední návratový kód: {result.get('returncode')}"
+        )
+        payload = urllib.parse.urlencode({"chat_id": chat_id, "text": message}).encode()
+        urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data=payload, timeout=15).read()
+    except Exception:
+        # Alerting must never change the outcome of a research run.
+        pass
 
 
 def build_prompt(role: str, run_dir: Path, mode: str, internal_compression: str = "caveman") -> str:
@@ -342,7 +388,7 @@ def main() -> int:
     except Exception as e:
         issues.append(f"source_url_audit helper exception: {type(e).__name__}: {e}")
 
-    for role in ["source_audit", "final_report", "quality_review"]:
+    for role in ["source_audit"]:
         res = run_hermes(role, build_prompt(role, run_dir, args.mode, args.internal_compression), run_dir, args.timeout, args.toolsets)
         timings[role] = res["elapsed_seconds"]
         used_profiles[role] = res.get("profile")
@@ -352,13 +398,37 @@ def main() -> int:
             issues.append(f"{role} return code {res['returncode']}")
         save_role_output(run_dir, role, res)
 
-    try:
-        export_args = [str(run_dir)] + ([] if args.no_upload else ["--upload"])
-        helpers["export_final"] = run_helper("export_final.py", export_args, timeout=300)
-        if helpers["export_final"]["returncode"] != 0:
-            issues.append("export_final helper failed")
-    except Exception as e:
-        issues.append(f"export_final helper exception: {type(e).__name__}: {e}")
+    final_result, final_attempts = run_final_writer_with_retry(run_dir, args.mode, args.internal_compression, args.timeout, args.toolsets)
+    timings["final_report"] = final_result["elapsed_seconds"]
+    used_profiles["final_report"] = final_result.get("profile")
+    if final_result.get("fallback_used"):
+        issues.append(f"final_report used fallback profile {final_result.get('profile')}")
+    if final_attempts > 1:
+        issues.append("final_report automatic retry succeeded" if final_result["returncode"] == 0 else "final_report automatic retry failed")
+    if final_result["returncode"] != 0:
+        issues.append(f"final_report return code {final_result['returncode']}")
+        notify_final_failure(run_dir, args.topic, final_result)
+
+    if final_result["returncode"] == 0:
+        role = "quality_review"
+        res = run_hermes(role, build_prompt(role, run_dir, args.mode, args.internal_compression), run_dir, min(args.timeout, FINAL_QUALITY_TIMEOUT), args.toolsets)
+        timings[role] = res["elapsed_seconds"]
+        used_profiles[role] = res.get("profile")
+        if res.get("fallback_used"):
+            issues.append(f"{role} used fallback profile {res.get('profile')}")
+        if res["returncode"] != 0:
+            issues.append(f"{role} return code {res['returncode']}")
+        save_role_output(run_dir, role, res)
+
+        try:
+            export_args = [str(run_dir)] + ([] if args.no_upload else ["--upload"])
+            helpers["export_final"] = run_helper("export_final.py", export_args, timeout=300)
+            if helpers["export_final"]["returncode"] != 0:
+                issues.append("export_final helper failed")
+        except Exception as e:
+            issues.append(f"export_final helper exception: {type(e).__name__}: {e}")
+    else:
+        issues.append("final report unavailable; skipped quality review and export")
 
     # Live propojeni s Lana RAG: ingestuj tento beh do znalostni baze (best-effort, nikdy nezhodi run).
     try:

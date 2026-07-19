@@ -3,13 +3,13 @@
     {
       "id": "13c0fe7b62a0",
       "name": "Security Audit Lite \u2014 no\u010dn\u00ed audit",
-      "prompt": "Jsi autonomn\u00ed bezpe\u010dnostn\u00ed audit agent pro Linux/VPS. Ka\u017edou noc m\u00e1\u0161 READ-ONLY zanalyzovat fakta ze skriptu n\u00ed\u017ee, dohledat kr\u00e1tce relevantn\u00ed \u010derstv\u00e9 CVE/advisories a zapsat report na disk.\n\nD\u016eLE\u017dIT\u00c9 BEZPE\u010cNOSTN\u00cd A PROVOZN\u00cd PRAVIDLO:\n- Audit pouze \u010dte a analyzuje. Nic neopravuj, neinstaluj, nevyp\u00ednej a nem\u011b\u0148.\n- Nikdy neozna\u010duj ani nenavrhuj vypnut\u00ed agent\u00edch re\u017eim\u016f typu --dangerously-*, --skip-permissions, --bypass-approvals apod.; jsou v\u011bdom\u011b akceptovan\u00e9 riziko.\n- Ne\u0159e\u0161 SSH passwordauthentication=yes jako probl\u00e9m; je v\u011bdom\u011b akceptovan\u00e9. U SSH \u0159e\u0161 jen root-login a brute-force ochranu.\n- Vynech FIM a Lynis. \u017d\u00e1dn\u00fd \u017eargon v Telegram shrnut\u00ed.\n\n\u00daKOL:\n1. Z injektovan\u00e9ho v\u00fdstupu skriptu zjisti cestu k facts_file a p\u0159e\u010dti fakta. Pokud je v injektovan\u00e9m v\u00fdstupu u\u017e kompletn\u00ed obsah, pou\u017eij ho; jinak pou\u017eij read_file.\n2. P\u0159e\u010dti p\u0159edchoz\u00ed report z /home/david_master/.hermes/security-audit-lite/report-latest.md, pokud existuje, kv\u016fli diffu nov\u00fdch/vy\u0159e\u0161en\u00fdch v\u011bc\u00ed.\n3. Dohled\u00e1n\u00ed CVE: ud\u011blej kr\u00e1tkou re\u0161er\u0161i za posledn\u00edch 7 dn\u00ed pro re\u00e1ln\u00fd stack z fakt\u016f (OS, vystaven\u00e9 slu\u017eby, nginx/apache/db/ssh/docker/node/python podle toho, co b\u011b\u017e\u00ed). Strop cca 6 web dotaz\u016f; ov\u011b\u0159 aspo\u0148 1\u20132 relevantn\u00ed v\u011bci p\u0159es NVD nebo OSV, pokud to d\u00e1v\u00e1 smysl. Nezahlcuj report.\n4. Zapi\u0161 markdown report do /home/david_master/.hermes/security-audit-lite/report-YYYY-MM-DD.md a z\u00e1rove\u0148 aktualizuj symlink nebo kopii /home/david_master/.hermes/security-audit-lite/report-latest.md (pokud symlink nejde, norm\u00e1ln\u011b zapi\u0161 kopii).\n5. Zapi\u0161 /home/david_master/.hermes/security-audit-lite/status.json pro dashboard ve tvaru {\"updated\":\"YYYY-MM-DD HH:MM UTC\",\"overall\":\"green|yellow|red\",\"areas\":[{\"name\":\"...\",\"status\":\"green|yellow|red\",\"note\":\"...\"}]}.\n6. Report mus\u00ed obsahovat sekci p\u0159esn\u011b pojmenovanou `## Shrnut\u00ed pro Telegram`. Tato sekce mus\u00ed b\u00fdt \u010desky, kr\u00e1tce, \u0159\u00e1dky pod sebou ve form\u00e1tu `\ud83d\udfe2/\ud83d\udfe1/\ud83d\udd34 \u2013 popis`; \u0159a\u010f \ud83d\udd34, pak \ud83d\udfe1, pak \ud83d\udfe2. Pokud je v\u0161e OK, \u017e\u00e1dn\u00e1 ot\u00e1zka. Pokud je jak\u00e9koliv \ud83d\udfe1 nebo \ud83d\udd34, na \u00fapln\u00fd konec dej pr\u00e1zdn\u00fd \u0159\u00e1dek a pak p\u0159esn\u011b: `\u2753 M\u00e1m opravit v\u0161e, co p\u016fjde? (napi\u0161 ano)`.\n\nNa z\u00e1v\u011br sv\u00e9 cron odpov\u011bdi napi\u0161 jen stru\u010dn\u011b cestu k vytvo\u0159en\u00e9mu reportu a celkov\u00fd semafor. U\u017eivateli se no\u010dn\u00ed v\u00fdstup nepos\u00edl\u00e1; rann\u00ed digest ho po\u0161le zvl\u00e1\u0161\u0165.",
+      "prompt": "Jsi autonomn\u00ed bezpe\u010dnostn\u00ed audit agent pro Linux/VPS. Ka\u017edou noc m\u00e1\u0161 READ-ONLY zanalyzovat fakta ze skriptu n\u00ed\u017ee, dohledat kr\u00e1tce relevantn\u00ed \u010derstv\u00e9 CVE/advisories a zapsat report na disk.\n\nD\u016eLE\u017dIT\u00c9 BEZPE\u010cNOSTN\u00cd A PROVOZN\u00cd PRAVIDLO:\n- Audit pouze \u010dte a analyzuje. Nic neopravuj, neinstaluj, nevyp\u00ednej a nem\u011b\u0148.\n- Nikdy neozna\u010duj ani nenavrhuj vypnut\u00ed agent\u00edch re\u017eim\u016f typu --dangerously-*, --skip-permissions, --bypass-approvals apod.; jsou v\u011bdom\u011b akceptovan\u00e9 riziko.\n- Ne\u0159e\u0161 SSH passwordauthentication=yes jako probl\u00e9m; je v\u011bdom\u011b akceptovan\u00e9. U SSH \u0159e\u0161 jen root-login a brute-force ochranu.\n- Vynech FIM a Lynis. \u017d\u00e1dn\u00fd \u017eargon v Telegram shrnut\u00ed.\n- Pravideln\u00e1 serverov\u00e1 z\u00e1loha je u\u017eivatelsky zaji\u0161t\u011bn\u00e1 ka\u017ed\u00fd pracovn\u00ed den. Z\u00e1lohy v\u016fbec nevyhodnocuj, nezmi\u0148uj je jako n\u00e1lez/riziko/doporu\u010den\u00ed a nezapo\u010d\u00edt\u00e1vej je do semaforu ani status.json.\n\n\u00daKOL:\n1. Z injektovan\u00e9ho v\u00fdstupu skriptu zjisti cestu k facts_file a p\u0159e\u010dti fakta. Pokud je v injektovan\u00e9m v\u00fdstupu u\u017e kompletn\u00ed obsah, pou\u017eij ho; jinak pou\u017eij read_file.\n2. P\u0159e\u010dti p\u0159edchoz\u00ed report z /home/david_master/.hermes/security-audit-lite/report-latest.md, pokud existuje, kv\u016fli diffu nov\u00fdch/vy\u0159e\u0161en\u00fdch v\u011bc\u00ed. P\u0159edchoz\u00ed zm\u00ednky o z\u00e1loh\u00e1ch ignoruj a nep\u0159en\u00e1\u0161ej je d\u00e1l.\n3. Dohled\u00e1n\u00ed CVE: ud\u011blej kr\u00e1tkou re\u0161er\u0161i za posledn\u00edch 7 dn\u00ed pro re\u00e1ln\u00fd stack z fakt\u016f (OS, vystaven\u00e9 slu\u017eby, nginx/apache/db/ssh/docker/node/python podle toho, co b\u011b\u017e\u00ed). Strop cca 6 web dotaz\u016f; ov\u011b\u0159 aspo\u0148 1\u20132 relevantn\u00ed v\u011bci p\u0159es NVD nebo OSV, pokud to d\u00e1v\u00e1 smysl. Nezahlcuj report.\n4. Zapi\u0161 markdown report do /home/david_master/.hermes/security-audit-lite/report-YYYY-MM-DD.md a z\u00e1rove\u0148 aktualizuj symlink nebo kopii /home/david_master/.hermes/security-audit-lite/report-latest.md (pokud symlink nejde, norm\u00e1ln\u011b zapi\u0161 kopii).\n5. Zapi\u0161 /home/david_master/.hermes/security-audit-lite/status.json pro dashboard ve tvaru {\"updated\":\"YYYY-MM-DD HH:MM UTC\",\"overall\":\"green|yellow|red\",\"areas\":[{\"name\":\"...\",\"status\":\"green|yellow|red\",\"note\":\"...\"}]}. Nezapisuj do n\u011bj oblast z\u00e1loh.\n6. Report mus\u00ed obsahovat sekci p\u0159esn\u011b pojmenovanou `## Shrnut\u00ed pro Telegram`. Tato sekce mus\u00ed b\u00fdt \u010desky, kr\u00e1tce, \u0159\u00e1dky pod sebou ve form\u00e1tu `\ud83d\udfe2/\ud83d\udfe1/\ud83d\udd34 \u2013 popis`; \u0159a\u010f \ud83d\udd34, pak \ud83d\udfe1, pak \ud83d\udfe2. Pokud je v\u0161e OK, \u017e\u00e1dn\u00e1 ot\u00e1zka. Pokud je jak\u00e9koliv \ud83d\udfe1 nebo \ud83d\udd34, na \u00fapln\u00fd konec dej pr\u00e1zdn\u00fd \u0159\u00e1dek a pak p\u0159esn\u011b: `\u2753 M\u00e1m opravit v\u0161e, co p\u016fjde? (napi\u0161 ano)`.\n\nNa z\u00e1v\u011br sv\u00e9 cron odpov\u011bdi napi\u0161 jen stru\u010dn\u011b cestu k vytvo\u0159en\u00e9mu reportu a celkov\u00fd semafor. U\u017eivateli se no\u010dn\u00ed v\u00fdstup nepos\u00edl\u00e1; rann\u00ed digest ho po\u0161le zvl\u00e1\u0161\u0165.",
       "skills": [],
       "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": "openai-codex",
-      "model_snapshot": "gpt-5.5",
+      "model": "gpt-5.6-terra",
+      "provider": "openai-codex",
+      "provider_snapshot": null,
+      "model_snapshot": null,
       "base_url": null,
       "script": "security-audit-lite/audit_collect.sh",
       "no_agent": false,
@@ -22,17 +22,17 @@
       "schedule_display": "0 3 * * *",
       "repeat": {
         "times": null,
-        "completed": 13
+        "completed": 20
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:25.066713+00:00",
-      "next_run_at": "2026-07-13T03:00:00+00:00",
-      "last_run_at": "2026-07-12T03:00:36.160351+00:00",
-      "last_status": "error",
-      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'gpt-5.5' -> 'gpt-5.6-terra'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=13c0fe7b62a0 provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
+      "next_run_at": "2026-07-20T03:00:00+00:00",
+      "last_run_at": "2026-07-19T03:03:43.179656+00:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
       "deliver": "local",
       "origin": {
@@ -72,15 +72,15 @@
       "schedule_display": "30 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 11
+        "completed": 18
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:36.316517+00:00",
-      "next_run_at": "2026-07-12T07:30:00+00:00",
-      "last_run_at": "2026-07-11T07:30:17.227067+00:00",
+      "next_run_at": "2026-07-19T07:30:00+00:00",
+      "last_run_at": "2026-07-18T07:30:28.409258+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -118,15 +118,15 @@
       "schedule_display": "45 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 11
+        "completed": 18
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-06-30T21:42:37.328128+00:00",
-      "next_run_at": "2026-07-12T07:45:00+00:00",
-      "last_run_at": "2026-07-11T07:45:17.462573+00:00",
+      "next_run_at": "2026-07-19T07:45:00+00:00",
+      "last_run_at": "2026-07-18T07:45:28.799983+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -164,15 +164,15 @@
       "schedule_display": "*/30 * * * *",
       "repeat": {
         "times": null,
-        "completed": 493
+        "completed": 829
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T21:19:31.812012+00:00",
-      "next_run_at": "2026-07-12T03:30:00+00:00",
-      "last_run_at": "2026-07-12T03:02:20.584255+00:00",
+      "next_run_at": "2026-07-19T03:30:00+00:00",
+      "last_run_at": "2026-07-19T03:01:23.751599+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -210,15 +210,15 @@
       "schedule_display": "0 8,18 * * *",
       "repeat": {
         "times": null,
-        "completed": 20
+        "completed": 34
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T21:19:32.824507+00:00",
-      "next_run_at": "2026-07-12T08:00:00+00:00",
-      "last_run_at": "2026-07-11T18:04:06.157111+00:00",
+      "next_run_at": "2026-07-19T08:00:00+00:00",
+      "last_run_at": "2026-07-18T18:01:27.736649+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -256,15 +256,15 @@
       "schedule_display": "0 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 10
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-01T22:01:18.498000+00:00",
-      "next_run_at": "2026-07-12T05:00:00+00:00",
-      "last_run_at": "2026-07-11T05:02:10.999233+00:00",
+      "next_run_at": "2026-07-19T05:00:00+00:00",
+      "last_run_at": "2026-07-18T05:01:30.803277+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -302,15 +302,15 @@
       "schedule_display": "30 4 * * *",
       "repeat": {
         "times": null,
-        "completed": 7
+        "completed": 14
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-04T14:06:15.685641+00:00",
-      "next_run_at": "2026-07-12T04:30:00+00:00",
-      "last_run_at": "2026-07-11T04:30:42.755147+00:00",
+      "next_run_at": "2026-07-19T04:30:00+00:00",
+      "last_run_at": "2026-07-18T04:30:36.284585+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -348,15 +348,15 @@
       "schedule_display": "0 6 */3 * *",
       "repeat": {
         "times": null,
-        "completed": 2
+        "completed": 4
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-07-06T15:44:00.630806+00:00",
-      "next_run_at": "2026-07-13T06:00:00+00:00",
-      "last_run_at": "2026-07-10T06:02:48.721556+00:00",
+      "next_run_at": "2026-07-19T06:00:00+00:00",
+      "last_run_at": "2026-07-16T06:01:50.929012+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -365,7 +365,53 @@
       "enabled_toolsets": null,
       "workdir": null,
       "fire_claim": null
+    },
+    {
+      "id": "737f38f74d8f",
+      "name": "Meeting Intelligence \u2014 denn\u00ed Drive sync",
+      "prompt": "Daily Meeting Intelligence export and Google Drive sync; WordPress publishing runs only if separately configured through environment credentials.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "meeting-intelligence-daily-sync.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "20 6 * * *",
+        "display": "20 6 * * *"
+      },
+      "schedule_display": "20 6 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 5
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-13T20:38:36.849203+00:00",
+      "next_run_at": "2026-07-19T06:20:00+00:00",
+      "last_run_at": "2026-07-18T06:20:31.565497+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "8629730938",
+        "chat_name": "David Hluze",
+        "thread_id": null,
+        "user_id": "8629730938"
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-07-12T03:02:20.585135+00:00"
+  "updated_at": "2026-07-19T03:03:43.181951+00:00"
 }

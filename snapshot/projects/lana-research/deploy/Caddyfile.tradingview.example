@@ -1,0 +1,5 @@
+# Replace lana.example.com with a domain whose DNS A record points to this VPS.
+# Caddy obtains HTTPS automatically after DNS is in place.
+lana.example.com {
+    reverse_proxy 127.0.0.1:8811
+}

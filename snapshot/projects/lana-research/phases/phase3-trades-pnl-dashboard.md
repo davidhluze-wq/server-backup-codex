@@ -3,6 +3,20 @@
 > Scénář ("noty") k provedení. Připraveno pro exekuci Opusem. Předchozí sessions psala Fable;
 > tuto fázi dotáhne a provede Opus podle tohoto souboru. **Žádné reálné peníze v této fázi.**
 
+## Kritické upřesnění po revizi
+
+- Tento playbook původně míchal dva rozdílné typy dat: predikční trhy (pravděpodobnost 0-1,
+  *edge*, Kelly) a ceny aktiv z TradingView. Cena BTC, akcie nebo CFD **není pravděpodobnost**;
+  z TradingView proto nelze odvozovat *edge* ani sizing bez samostatně ověřeného cenového modelu.
+- Vzorek z automatického optimalizování parametrů není důkazem obchodovatelnosti. Každá strategie
+  musí mít předem danou hypotézu, oddělený in-sample/out-of-sample test, walk-forward test,
+  náklady/slippage a kontrolu více testování. Nejlepší historický profit factor sám o sobě nestačí.
+- TradingView je v této fázi zdroj alertu, nikoliv broker. Alert vytvoří pouze auditovaný
+  `research-pass` paper signál. Do lokálního paper obchodu může přejít až po nezávislém
+  schválení `paper-watch`; propojení s reálným brokerem patří až do samostatné, ručně schvalované fáze.
+- Veřejný TradingView webhook vyžaduje samostatnou HTTPS doménu a rychlou odpověď. Port 8811 se
+  nesmí zveřejňovat přímo; popis aktivace je v `docs/TRADINGVIEW_PAPER_SETUP.md`.
+
 ## Cíl
 Nad znalostní bází (RAG + blueprint z fáze 1–2) postavit **demo trading vrstvu**, která:
 1. generuje obchodní **signály** (kalibrovaný odhad pravděpodobnosti vs. tržní cena → *edge*),
@@ -48,6 +62,8 @@ create table if not exists lana.pnl_snapshots(
 - Nikdy nevydávej investiční doporučení; jde o experiment/simulaci.
 - Token rozpočet: signal_engine jen na trhy s |edge| kandidátem; judge (dražší) jen na top N.
 - Vše logováno; deterministické části (fetch, P&L, sizing) bez LLM.
+- Každý příchozí alert má stabilní `event_id`, je idempotentní a nesmí obsahovat žádné přihlašovací
+  údaje ani klíče.
 
 ## Akceptační kritéria (hotovo když)
 - Dashboard ukazuje **živě paper obchody, P&L statement, equity křivku a monitor signálů**.

@@ -25,7 +25,7 @@
         {
           "role": "db_steward",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "infrastructure/prompts/db_steward.md"
         },
@@ -83,7 +83,7 @@
         {
           "role": "report_writer",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "finance/prompts/report_writer.md"
         },
@@ -135,14 +135,14 @@
         {
           "role": "nda_drafter",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "legal-lite/prompts/nda_drafter.md"
         },
         {
           "role": "comparator",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "legal-lite/prompts/comparator.md"
         },
@@ -176,7 +176,7 @@
         {
           "role": "seo_content",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "marketing-crew/prompts/seo-content.md"
         },
@@ -190,7 +190,7 @@
         {
           "role": "messaging_conversion",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "marketing-crew/prompts/messaging-conversion.md"
         },
@@ -242,14 +242,14 @@
         {
           "role": "copywriter",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "marketing-crew/prompts/copywriter.md"
         },
         {
           "role": "content_maker",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "marketing-crew/prompts/content_maker.md"
         },
@@ -263,7 +263,7 @@
         {
           "role": "social_analyst",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "marketing-crew/prompts/social_analyst.md"
         }
@@ -283,7 +283,7 @@
         {
           "role": "research_a",
           "profile": "deepresearch-gpt55",
-          "model": "gpt-5.5",
+          "model": "gpt-5.6-sol",
           "tier": "drahy",
           "doc": "deepresearch/prompts"
         },
@@ -311,7 +311,7 @@
         {
           "role": "final_report",
           "profile": "deepresearch-gpt55",
-          "model": "gpt-5.5",
+          "model": "gpt-5.6-sol",
           "tier": "drahy",
           "doc": "deepresearch/prompts"
         },
@@ -338,14 +338,14 @@
         {
           "role": "news_summarize",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "scripts/news_monitor.py"
         },
         {
           "role": "radar",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "scripts/ai_auto_radar.py"
         }
@@ -395,21 +395,21 @@
         {
           "role": "research (fundamental)",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "lana-trading/prompts/research.md"
         },
         {
           "role": "quant / kalibrace",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "lana-trading/prompts/quant.md"
         },
         {
           "role": "sentiment / news",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "lana-trading/prompts/sentiment.md"
         },
@@ -458,21 +458,21 @@
         {
           "role": "reliability-analyst",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "hermes-architect/prompts/reliability-analyst.md"
         },
         {
           "role": "runtime-optimizer",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "hermes-architect/prompts/runtime-optimizer.md"
         },
         {
           "role": "token-economist",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "hermes-architect/prompts/token-economist.md"
         },
@@ -486,7 +486,7 @@
         {
           "role": "trend-scout",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "hermes-architect/prompts/trend-scout.md"
         }
@@ -517,14 +517,14 @@
         {
           "role": "minutes-writer",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "meeting-intel/prompts/minutes-writer.md"
         },
         {
           "role": "idea-distiller",
           "profile": "worker-gpt-mini",
-          "model": "gpt-5.4-mini",
+          "model": "gpt-5.6-luna",
           "tier": "levny",
           "doc": "meeting-intel/prompts/idea-distiller.md"
         },

@@ -1,11 +1,12 @@
 {
   "roles": [
-    {"n": 1, "key": "strategist", "name": "Stratég / Portfolio Lead", "model": "opus", "mandate": "Určuje zaměření a alokaci; vybírá trhy dle blueprintu a preferovaného směru."},
-    {"n": 2, "key": "research", "name": "Fundamentální analytik", "model": "worker-gpt-mini", "mandate": "Sestaví thesis z RAG evidence (findings/sources) k danému trhu."},
-    {"n": 3, "key": "quant", "name": "Kvant / Kalibrace", "model": "worker-gpt-mini", "mandate": "Odhad pravděpodobnosti a edge vs. tržní cena; kalibrace."},
-    {"n": 4, "key": "sentiment", "name": "Sentiment / News", "model": "worker-gpt-mini", "mandate": "Tržní sentiment a krátkodobé katalyzátory."},
-    {"n": 5, "key": "risk", "name": "Risk manažer", "model": "worker-sonnet", "mandate": "Limity, sizing (frakční Kelly), drawdown, kill-switch. Ctí approval_policy."},
-    {"n": 6, "key": "execution", "name": "Exekuce", "model": "deterministický", "mandate": "Sestaví přesný příkaz; v demu míří na demo účet, nikdy na reálné operace s účtem."},
-    {"n": 7, "key": "reviewer", "name": "Reviewer / Judge", "model": "opus", "mandate": "Finální kontrola před odesláním + post-trade audit."}
+    {"n": 1, "key": "data_steward", "name": "Data Steward", "model": "deterministický", "mandate": "Licencovaná data, snapshoty, hash, missing bars, kontrakty a roll map; při chybě blokuje pipeline."},
+    {"n": 2, "key": "quant", "name": "Commodity Scanner", "model": "deterministický", "mandate": "Počítá zmrazený ranking z trendu, volatility, likvidity a korelačních filtrů; žádné LLM cenové predikce."},
+    {"n": 3, "key": "research", "name": "Fundamentální Research", "model": "worker-gpt-mini", "mandate": "Vysvětluje ověřené fundamenty a události pouze pro kandidáty vybrané scannerem."},
+    {"n": 4, "key": "sentiment", "name": "Události a režim", "model": "worker-gpt-mini", "mandate": "Přidává pouze ověřené event-risk blokace; nemění ranking ani neotevírá pozici."},
+    {"n": 5, "key": "risk", "name": "Risk Officer", "model": "deterministický", "mandate": "Volatility sizing, multipliers, sektorové limity, drawdown stop a kill-switch; bez Kelly z prediction marketů."},
+    {"n": 6, "key": "execution", "name": "Paper Ledger", "model": "deterministický", "mandate": "Zapisuje immutable order intent, simulated fill, cash, position a audit log; bez broker connectoru."},
+    {"n": 7, "key": "reviewer", "name": "Research Skeptic / Judge", "model": "opus", "mandate": "Má veto bez OOS, walk-forward, realismu fees/slippage, licence dat nebo úplné datové stopy."},
+    {"n": 8, "key": "ops_compliance", "name": "Ops a Compliance", "model": "worker-sonnet", "mandate": "Secrets, Docker health, monitoring, data licence, digest bez raw dat a incident log."}
   ]
 }

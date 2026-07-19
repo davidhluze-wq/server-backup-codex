@@ -44,6 +44,12 @@ Ruční rebuild indexu:
 ~/.hermes/deepresearch/scripts/rebuild_index.py
 ```
 
+Pokud selže jen finální autor, lze bez opakování sběru zdrojů opravit závěr existujícího běhu:
+
+```bash
+~/.hermes/deepresearch/scripts/retry_final_report.py ~/.hermes/deepresearch/runs/<run-id>
+```
+
 Výstup se uloží do:
 
 ```text
@@ -56,6 +62,12 @@ Výstup se uloží do:
 - Všechny výstupy jsou textové a čitelné pro Codex Master kontrolora.
 - API klíče ani tokeny se do výstupů záměrně nezapisují.
 - Veřejné porty se nevytvářejí ani neotevírají.
+
+## Odolnost finálního výstupu
+
+- Finální autor standardně používá profil `deepresearch-claude-opus`; při chybě automaticky přechází na `worker-sonnet` a poté se jednou zopakuje celá finální fáze.
+- Jeden pokus finálního autora i kontroly kvality má standardně nejvýše pět minut; lze jej upravit proměnnou `HERMES_DEEPRESEARCH_FINAL_QUALITY_TIMEOUT`.
+- Pokud selžou všechny pokusy, run se označí jako částečný, přeskočí kontrolu kvality i export a odešle Telegram upozornění s doporučením. Chybový soubor se proto nikdy nevydává za hotový report.
 
 ## Implementační poznámka
 

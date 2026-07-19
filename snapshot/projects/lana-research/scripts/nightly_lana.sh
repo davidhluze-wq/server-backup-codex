@@ -67,7 +67,14 @@ else
   log "curate preskocen (malo casu)"
 fi
 
-# --- 4) RESEARCHER (fáze 2): jedno téma z fronty, jen pokud zbývá dost času (>45 min) ---
+# --- 4) DOPLNĚNÍ FRONTY: z nových sklizených zdrojů vytvoří až tři nevyřízené kandidáty ---
+now=$(date +%s); rem=$((end - now))
+if [ "$rem" -gt 90 ]; then
+  timeout "$rem" "$PY" "$LR/scripts/refresh_plan_queue.py" >> "$LOG" 2>&1
+  log "queue-refresh rc=$?"
+fi
+
+# --- 5) RESEARCHER (fáze 2): jedno téma z fronty, jen pokud zbývá dost času (>45 min) ---
 now=$(date +%s); rem=$((end - now))
 if [ "${LANA_RESEARCHER:-1}" = "1" ] && [ "$rem" -gt 2700 ]; then
   timeout "$rem" "$PY" "$LR/scripts/run_researcher.py" >> "$LOG" 2>&1

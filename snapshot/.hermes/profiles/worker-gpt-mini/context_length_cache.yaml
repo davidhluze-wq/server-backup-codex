@@ -1,3 +1,4 @@
 context_lengths:
   gpt-5.4-mini@https://chatgpt.com/backend-api/codex: 272000
   gpt-5.4-mini@https://chatgpt.com/backend-api/codex/: 272000
+  gpt-5.6-luna@https://chatgpt.com/backend-api/codex: 272000

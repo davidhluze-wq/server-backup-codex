@@ -1,0 +1,21 @@
+{
+  "purpose": "local feasibility only; no external data, broker, keys, or orders",
+  "ledger": {
+    "symbols": 20,
+    "bars_per_symbol": 756,
+    "events": 503,
+    "open_positions": 13,
+    "realized_before_fees": -458.687848,
+    "fees": 628.75,
+    "digest": "53c63d5eb52c57088486b118ea2b46373d0a3bc6db862d76b9c8c66c6ee9d1e0",
+    "elapsed_ms": 39.953,
+    "replay_deterministic": true
+  },
+  "nautilus": {
+    "version": "1.221.0",
+    "synthetic_instrument_only": true,
+    "elapsed_ms": 1892.325
+  },
+  "max_rss_kib": 259428,
+  "decision": "Nautilus remains a candidate until real licensed futures data proves roll, multiplier, fill and replay behavior."
+}

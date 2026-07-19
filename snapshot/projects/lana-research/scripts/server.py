@@ -325,6 +325,28 @@ def _crew() -> bytes:
     return json.dumps(d).encode()
 
 
+def _tradingview_status() -> bytes:
+    try:
+        import tradingview_paper
+        return json.dumps(tradingview_paper.status()).encode()
+    except Exception as e:
+        return json.dumps({"configured": False, "error": str(e)[:150]}).encode()
+
+
+def _tradingview_webhook(path: str, payload: dict):
+    """Public endpoint only when its unguessable URL token is configured."""
+    try:
+        import tradingview_paper
+        token = path.split("?", 1)[0].rsplit("/", 1)[-1]
+        if not tradingview_paper.verify_token(token):
+            return 401, {"ok": False, "error": "invalid webhook token"}
+        return 202, tradingview_paper.ingest(payload)
+    except ValueError as e:
+        return 400, {"ok": False, "error": str(e)[:150]}
+    except Exception:
+        return 500, {"ok": False, "error": "webhook processing failed"}
+
+
 def _run_crew_cycle(data):
     try:
         import trading_crew
@@ -645,6 +667,7 @@ function renderTrading(m){
      <span class="text-[11px] px-2 py-0.5 rounded bg-amber-100 text-amber-700">OFFLINE / PAPER — mock data, žádné reálné peníze</span></div>
    <p class="text-sm text-slate-500 mb-3">Fáze 3 nanečisto: signály z RAG (edge = odhad vs. tržní cena), simulované obchody a P&L. K prozkoumání UI.</p>
    <div class="flex gap-1 mb-3">${["all","paper","demo","live"].map(x=>`<button onclick="setTMode('${x}')" class="px-2.5 py-1 rounded text-[12px] font-medium ${x===TMODE?"bg-emerald-600 text-white":"bg-slate-100 text-slate-600 hover:bg-slate-200"}">${x==="all"?"Vše":x}</button>`).join("")}</div>
+   <div id="t-tradingview" class="rounded-lg border border-slate-200 bg-white p-3 mb-4"></div>
    <div id="t-crew" class="rounded-lg border border-slate-200 bg-white p-3 mb-4"></div>
    <div id="t-kpi" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4"></div>
    <div class="rounded-lg border border-slate-200 bg-white p-3 mb-4"><h3 class="text-sm font-semibold mb-2">Equity křivka (30 dní)</h3><div id="t-equity"></div></div>
@@ -655,15 +678,25 @@ function renderTrading(m){
 function setTMode(x){ TMODE=x; renderTrading(document.getElementById("main")); }
 let TSIGNALS=[];
 async function loadTrading(){
-  try{ const [pnl,sig,tr,crew]=await Promise.all([
+  try{ const [pnl,sig,tr,crew,tv]=await Promise.all([
       fetch("/api/pnl",{credentials:"same-origin"}).then(r=>r.json()),
       fetch("/api/signals",{credentials:"same-origin"}).then(r=>r.json()),
       fetch("/api/trades",{credentials:"same-origin"}).then(r=>r.json()),
-      fetch("/api/crew",{credentials:"same-origin"}).then(r=>r.json())]);
-    renderTCrew(crew); renderTKpi(pnl); renderTEquity(pnl.equity||[]);
+      fetch("/api/crew",{credentials:"same-origin"}).then(r=>r.json()),
+      fetch("/api/tradingview/status",{credentials:"same-origin"}).then(r=>r.json())]);
+    renderTTradingView(tv); renderTCrew(crew); renderTKpi(pnl); renderTEquity(pnl.equity||[]);
     TSIGNALS=(sig.items||[]).filter(s=>TMODE==="all"||s.mode===TMODE); renderTSignals(TSIGNALS);
     renderTTrades((tr.items||[]).filter(t=>TMODE==="all"||t.mode===TMODE));
   }catch(e){ const k=document.getElementById("t-kpi"); if(k) k.innerHTML='<p class="text-slate-400 text-sm">nelze načíst</p>'; }
+}
+function renderTTradingView(d){
+  const box=document.getElementById("t-tradingview"); if(!box) return;
+  const ready=d.configured&&d.account&&d.account.active;
+  const state=ready?"připraveno pro paper alerty":"čeká na HTTPS doménu a token";
+  const cls=ready?"bg-emerald-100 text-emerald-700":"bg-amber-100 text-amber-700";
+  const account=d.account?`${esc(d.account.name)} · $${Number(d.account.initial_equity).toLocaleString()} ${esc(d.account.currency)}`:"demo účet není inicializovaný";
+  const seen=d.accepted_events||0;
+  box.innerHTML=`<div class="flex items-center gap-2 flex-wrap"><h3 class="text-sm font-semibold">TradingView Paper</h3><span class="rounded px-1.5 py-0.5 text-[10px] font-medium ${cls}">${state}</span><span class="text-[11px] text-slate-400">${account}</span><span class="ml-auto text-[11px] text-slate-400">přijaté alerty: ${seen}</span></div><p class="mt-1 text-[11px] text-slate-500">Webhook ukládá pouze research/paper signály; bez `paper-watch` brány nevzniká obchod.</p>`;
 }
 function renderTCrew(d){
   const box=document.getElementById("t-crew"); if(!box) return;
@@ -696,6 +729,11 @@ function toggleSig(i){
   } else { row.classList.add("hidden"); }
 }
 function tcard(label,val,sub,color){ return `<div class="rounded-lg border border-slate-200 bg-white p-3"><p class="text-[11px] text-slate-500">${label}</p><p class="text-xl font-semibold ${color||""}">${val}</p><p class="text-[11px] text-slate-400">${sub||""}</p></div>`; }
+function tvSignal(s){ return ((s.evidence||{}).provider||"")==="tradingview"; }
+function fmtSignalPrice(s){ return s.price==null?"—":(tvSignal(s)?("$"+Number(s.price).toLocaleString(undefined,{maximumFractionDigits:6})):(Number(s.price)*100).toFixed(0)+"¢"); }
+function fmtSignalProb(s){ return s.prob==null?"—":(Number(s.prob)*100).toFixed(0)+"¢"; }
+function fmtSignalEdge(s){ return s.edge==null?"—":((s.edge>=0?"+":"")+(Number(s.edge)*100).toFixed(1)); }
+function fmtSignalConf(s){ return s.confidence==null?"—":Math.round(Number(s.confidence)*100)+"%"; }
 function renderTKpi(p){
   const eq=p.equity_now!=null?("$"+p.equity_now.toFixed(0)):"—";
   const rl=(p.realized>=0?"+":"")+"$"+(p.realized||0).toFixed(2);
@@ -720,7 +758,7 @@ function renderTEquity(series){
 }
 function tbadge(txt,cls){ return `<span class="rounded px-1.5 py-0.5 text-[10px] font-medium ${cls}">${esc(txt)}</span>`; }
 function tmode(m){ return tbadge(m,{paper:"bg-sky-100 text-sky-700",demo:"bg-violet-100 text-violet-700",live:"bg-rose-100 text-rose-700"}[m]||"bg-slate-100 text-slate-600"); }
-function tside(s){ return tbadge(s,s==="YES"?"bg-emerald-100 text-emerald-700":"bg-rose-100 text-rose-700"); }
+function tside(s){ return tbadge(s,["YES","BUY","LONG"].includes(s)?"bg-emerald-100 text-emerald-700":"bg-rose-100 text-rose-700"); }
 function renderTSignals(items){
   const box=document.getElementById("t-signals"); if(!box) return;
   if(!items.length){ box.innerHTML='<p class="text-slate-400 text-sm">žádné signály v tomto režimu</p>'; return; }
@@ -728,9 +766,9 @@ function renderTSignals(items){
     <table class="w-full text-[12px]"><thead><tr class="text-slate-400 text-left border-b border-slate-100">
     <th class="py-1 pr-2">Trh</th><th class="pr-2">Strana</th><th class="pr-2">Cena</th><th class="pr-2">Odhad</th><th class="pr-2">Edge</th><th class="pr-2">Confid.</th><th class="pr-2">Stav</th><th class="pr-2">Režim</th><th></th></tr></thead><tbody>`+
     items.map((s,i)=>`<tr onclick="toggleSig(${i})" class="border-b border-slate-50 align-top cursor-pointer hover:bg-slate-50"><td class="py-1.5 pr-2"><div class="font-medium">${esc(s.market)}</div><div class="text-slate-400 text-[11px]">${esc((s.question||"").slice(0,64))}</div></td>
-      <td class="pr-2">${tside(s.side)}</td><td class="pr-2">${(s.price*100).toFixed(0)}¢</td><td class="pr-2">${(s.prob*100).toFixed(0)}¢</td>
-      <td class="pr-2 font-medium ${s.edge>=0?"text-emerald-600":"text-rose-600"}">${s.edge>=0?"+":""}${(s.edge*100).toFixed(1)}</td>
-      <td class="pr-2">${Math.round(s.confidence*100)}%</td><td class="pr-2 text-slate-500">${esc(s.status)}</td><td class="pr-2">${tmode(s.mode)}</td><td class="text-slate-300">▾</td></tr>
+      <td class="pr-2">${tside(s.side)}</td><td class="pr-2">${fmtSignalPrice(s)}</td><td class="pr-2">${fmtSignalProb(s)}</td>
+      <td class="pr-2 font-medium ${s.edge==null?"text-slate-400":(s.edge>=0?"text-emerald-600":"text-rose-600")}">${fmtSignalEdge(s)}</td>
+      <td class="pr-2">${fmtSignalConf(s)}</td><td class="pr-2 text-slate-500">${esc(s.status)}</td><td class="pr-2">${tmode(s.mode)}</td><td class="text-slate-300">▾</td></tr>
       <tr id="sigd-${i}" class="hidden bg-slate-50"><td colspan="9" class="p-2"></td></tr>`).join("")+`</tbody></table>`;
 }
 function renderTTrades(items){
@@ -876,7 +914,16 @@ def serve(host="0.0.0.0", port=8811):
     class H(BaseHTTPRequestHandler):
         def log_message(self, *a): pass
         def _denied(self):
-            self.send_response(401); self.send_header("WWW-Authenticate", 'Basic realm="Lana Research"'); self.end_headers()
+            body = ("<!doctype html><html lang='cs'><meta charset='utf-8'><title>Lana Research — přihlášení</title>"
+                    "<body style='font-family:system-ui;max-width:42rem;margin:5rem auto;padding:1.5rem'>"
+                    "<h1>Přihlášení je vyžadováno</h1><p>Lana Trading dashboard je chráněný. "
+                    "Zadej prosím své přístupové údaje do prohlížečového dialogu a stránku načti znovu.</p>"
+                    "</body></html>").encode("utf-8")
+            self.send_response(401)
+            self.send_header("WWW-Authenticate", 'Basic realm="Lana Research"')
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers(); self.wfile.write(body)
         def do_GET(self):
             if user and pwhash and not _auth_ok(self.headers.get("Authorization"), user, pwhash):
                 return self._denied()
@@ -902,6 +949,8 @@ def serve(host="0.0.0.0", port=8811):
                 body = _pnl(); ctype = "application/json"
             elif self.path.startswith("/api/crew"):
                 body = _crew(); ctype = "application/json"
+            elif self.path.startswith("/api/tradingview/status"):
+                body = _tradingview_status(); ctype = "application/json"
             elif self.path.startswith("/api/phase/doc"):
                 from urllib.parse import urlparse, parse_qs
                 n = parse_qs(urlparse(self.path).query).get("n", [""])[0]
@@ -920,28 +969,38 @@ def serve(host="0.0.0.0", port=8811):
             self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body)
 
         def do_POST(self):
-            if user and pwhash and not _auth_ok(self.headers.get("Authorization"), user, pwhash):
+            is_tradingview = self.path.startswith("/api/tradingview/webhook/")
+            if not is_tradingview and user and pwhash and not _auth_ok(self.headers.get("Authorization"), user, pwhash):
                 return self._denied()
             if (self.path.startswith("/api/ingest") or self.path.startswith("/api/plan/run")
                     or self.path.startswith("/api/phase/launch") or self.path.startswith("/api/approval")
-                    or self.path.startswith("/api/crew/run")):
+                    or self.path.startswith("/api/crew/run") or is_tradingview):
                 ln = int(self.headers.get("Content-Length", 0) or 0)
+                if ln > 16_384:
+                    self.send_response(413); self.end_headers(); return
                 try:
                     data = json.loads(self.rfile.read(ln) or b"{}") if ln else {}
                 except Exception:
                     data = {}
-                if self.path.startswith("/api/plan/run"):
+                if is_tradingview:
+                    code, res = _tradingview_webhook(self.path, data)
+                elif self.path.startswith("/api/plan/run"):
                     res = _run_topic(data.get("id"))
+                    code = 200 if res.get("ok") else 400
                 elif self.path.startswith("/api/phase/launch"):
                     res = _launch_phase(data.get("n"))
+                    code = 200 if res.get("ok") else 400
                 elif self.path.startswith("/api/approval"):
                     res = _set_approval(data)
+                    code = 200 if res.get("ok") else 400
                 elif self.path.startswith("/api/crew/run"):
                     res = _run_crew_cycle(data)
+                    code = 200 if res.get("ok") else 400
                 else:
                     res = _ingest_url(data.get("url"), data.get("title"))
+                    code = 200 if res.get("ok") else 400
                 body = json.dumps(res).encode()
-                self.send_response(200 if res.get("ok") else 400)
+                self.send_response(code)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body)
             else:

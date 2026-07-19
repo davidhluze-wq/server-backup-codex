@@ -774,6 +774,36 @@ PROXY_BACKENDS = {
 }
 
 
+def _startup_meetings_auth_ok(header: str | None) -> bool:
+    """Accept only the dedicated Startup account for the shared Meeting workspace."""
+    auth_file = os.path.expanduser("~/meeting-intel/.auth.startup")
+    try:
+        lines = open(auth_file, encoding="utf-8").read().splitlines()
+    except OSError:
+        return False
+    for line in lines:
+        user, separator, rest = line.strip().partition(":")
+        password_hash, _, role = rest.partition(":")
+        if separator and user == "startup" and role == "admin":
+            return _auth_ok(header, user, password_hash)
+    return False
+
+
+def _is_startup_meetings_path(path: str) -> bool:
+    return path[1:].split("/", 1)[0].split("?", 1)[0] == "startup-meetings"
+
+
+def _startup_meetings_resource_path(path: str) -> bool:
+    """Resources required by the isolated Next.js Meeting workspace for the Startup account."""
+    clean_path = path.split("?", 1)[0]
+    return (
+        _is_startup_meetings_path(clean_path)
+        or clean_path.startswith("/meetings/api/")
+        or clean_path.startswith("/_next/")
+        or clean_path in {"/icon.svg", "/favicon.ico"}
+    )
+
+
 def _proxy(prefix, path, auth):
     """Reverse-proxy k lokalnimu dashboardu. Preposila Authorization a prefixuje absolutni cesty,
     aby app bezela pod /<prefix>/. Pozn.: WebSocket (Hermes live) pres stdlib server neprojde —
@@ -818,6 +848,45 @@ def _proxy(prefix, path, auth):
                     .replace(b'"/assets/', b'"' + p + b'/assets/')
                     .replace(b"'/api/", b"'" + p + b"/api/"))
     return data, ctype, status
+
+
+def _tunnel_startup(path, auth, body=None, ctype_in=None):
+    """Tunel /startup-meetings -> startup-ingest (127.0.0.1:8813). agentsmon NEauthentikuje —
+    vlastní 'startup' login řeší ten server. Forwarduje Authorization + WWW-Authenticate (401)."""
+    import urllib.request, urllib.error
+    sub = path[len("/startup-meetings"):] or "/"
+    if not sub.startswith("/"):
+        sub = "/" + sub
+    req = urllib.request.Request("http://127.0.0.1:8813" + sub, data=body,
+                                 method=("POST" if body is not None else "GET"))
+    if auth:
+        req.add_header("Authorization", auth)
+    if body is not None:
+        req.add_header("Content-Type", ctype_in or "application/json")
+    try:
+        r = urllib.request.urlopen(req, timeout=20)
+        return r.read(), r.headers.get("Content-Type", "application/octet-stream"), r.status, r.headers.get("WWW-Authenticate")
+    except urllib.error.HTTPError as e:
+        h = e.headers
+        return (e.read() if hasattr(e, "read") else b""), \
+               (h.get("Content-Type", "text/plain") if h else "text/plain"), e.code, \
+               (h.get("WWW-Authenticate") if h else None)
+    except Exception:
+        return None
+
+
+def _proxy_next(path):
+    """Forward GET k Next.js Command Center (127.0.0.1:3030) as-is (bez rewrite — Next servíruje
+    správné absolutní cesty /_next, /api...). Slouží jako root UI celého hubu."""
+    import urllib.request, urllib.error
+    try:
+        r = urllib.request.urlopen("http://127.0.0.1:3030" + path, timeout=15)
+        return r.read(), r.headers.get("Content-Type", "application/octet-stream"), r.status
+    except urllib.error.HTTPError as e:
+        return (e.read() if hasattr(e, "read") else b""), \
+               (e.headers.get("Content-Type", "text/plain") if e.headers else "text/plain"), e.code
+    except Exception:
+        return None
 
 
 def _proxy_post(prefix, path, auth, body, ctype_in):
@@ -917,9 +986,9 @@ def serve(host: str, port: int) -> None:
                 self.send_header("Content-Length", str(len(data)))
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers(); self.wfile.write(data); return
-            if auth_user and auth_hash and not _auth_ok(self.headers.get("Authorization"),
-                                                        auth_user, auth_hash):
-                return self._denied()
+            if auth_user and auth_hash and not _auth_ok(self.headers.get("Authorization"), auth_user, auth_hash):
+                if not (_startup_meetings_resource_path(self.path) and _startup_meetings_auth_ok(self.headers.get("Authorization"))):
+                    return self._denied()
             if self.path.startswith("/api/state"):
                 body = _state()
                 self.send_response(200)
@@ -943,6 +1012,18 @@ def serve(host: str, port: int) -> None:
                 body, ctype = res
                 self.send_response(200)
                 self.send_header("Content-Type", ctype)
+            elif _is_startup_meetings_path(self.path):
+                # Dedicated team address serves the scoped Next.js Meeting workspace, not the full Command Center.
+                res = _proxy_next("/startup-meetings")
+                if res is None:
+                    self.send_response(502)
+                    self.send_header("Content-Type", "text/plain; charset=utf-8")
+                    self.end_headers()
+                    self.wfile.write("Command Center (Next) nedostupny".encode())
+                    return
+                body, ctype, status = res
+                self.send_response(status)
+                self.send_header("Content-Type", ctype)
             elif self.path[1:].split("/", 1)[0].split("?")[0] in PROXY_BACKENDS:
                 prefix = self.path[1:].split("/", 1)[0].split("?")[0]
                 res = _proxy(prefix, self.path, self.headers.get("Authorization"))
@@ -955,24 +1036,46 @@ def serve(host: str, port: int) -> None:
                 body, ctype, status = res
                 self.send_response(status)
                 self.send_header("Content-Type", ctype)
-            elif self.path == "/" or self.path.startswith("/index"):
+            elif self.path.startswith("/_agentsmon"):
                 body = page
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
             else:
-                self.send_response(404)
-                self.end_headers()
-                return
+                # Vse ostatni (/, /_next/*, ikony, app routes) -> Next.js Command Center (root UI)
+                res = _proxy_next(self.path)
+                if res is None:
+                    self.send_response(502)
+                    self.send_header("Content-Type", "text/plain; charset=utf-8")
+                    self.end_headers()
+                    self.wfile.write("Command Center (Next) nedostupny".encode())
+                    return
+                body, ctype, status = res
+                self.send_response(status)
+                self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
 
         def do_POST(self):
-            if auth_user and auth_hash and not _auth_ok(self.headers.get("Authorization"),
-                                                        auth_user, auth_hash):
-                return self._denied()
+            if auth_user and auth_hash and not _auth_ok(self.headers.get("Authorization"), auth_user, auth_hash):
+                if not (_startup_meetings_resource_path(self.path) and _startup_meetings_auth_ok(self.headers.get("Authorization"))):
+                    return self._denied()
             from urllib.parse import urlparse, parse_qs
             parsed = urlparse(self.path)
+            # Sdileny upload pro kolegy (startup auth uz overena vyse): -> startup-ingest 8813
+            if parsed.path.rstrip("/") == "/startup-meetings/api/upload":
+                length = int(self.headers.get("Content-Length", 0) or 0)
+                raw = self.rfile.read(length) if length else b""
+                res = _tunnel_startup(self.path, self.headers.get("Authorization"),
+                                      body=raw, ctype_in=self.headers.get("Content-Type"))
+                if res is None:
+                    self.send_response(502); self.end_headers(); return
+                data, ct, st, wa = res
+                self.send_response(st)
+                if wa:
+                    self.send_header("WWW-Authenticate", wa)
+                self.send_header("Content-Type", ct); self.send_header("Content-Length", str(len(data)))
+                self.end_headers(); self.wfile.write(data); return
             # Reverse-proxy POST k dashboardum (tlacitka Lana/Meetings: research/concept/ingest…)
             seg = parsed.path[1:].split("/", 1)[0]
             if seg in PROXY_BACKENDS:

@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """
-Lana trading crew — multiagentní posádka (fáze 4/5).
+Lana trading crew — legacy offline simulation only.
 
 Architektura inspirovaná osvědčeným open-source řešením 'ai-hedge-fund' (virattt):
 několik analytiků → risk manažer → exekuce → reviewer/portfolio. Přizpůsobeno
 prediction marketům a Lana RAG.
 
-Režimy:
-- výchozí = OFFLINE dry-run: deterministická logika, žádné reálné napojení, žádné tokeny.
-  Vygeneruje demo signály/obchody přes celý rolový pipeline (pro demo/UI).
-- --llm: role používají Hermes modely (`hermes -p <profil> chat`) dle crew_roles.json.
+Režim demo vytváří pouze náhodnou vizuální simulaci pro dashboard. Není to strategie,
+backtest ani commodity paper trading. Režim paper je záměrně blokovaný, dokud Commodity
+Autopilot nemá licencovaná data, deterministický ranking, research gate a paper ledger.
 
 Ctí risk limity a `phases/approval_policy.json` (fáze 5). V demu se neschvaluje ručně.
 Spouštěj přes humanagentwiki venv (DATABASE_URL).  trading_crew.py [--mode demo|paper] [--limit 6] [--llm]
@@ -85,6 +84,11 @@ def _analysts(price, thesis):
 
 
 def run_cycle(mode="demo", limit=6, use_llm=False):
+    if mode != "demo":
+        raise RuntimeError(
+            "Commodity paper mode is blocked: configure licensed data, deterministic ranking, "
+            "research gate and paper ledger first. The current cycle is simulation-only."
+        )
     c = _db(); cur = c.cursor()
     _ensure(cur)
     pol = _policy()
@@ -122,8 +126,9 @@ def run_cycle(mode="demo", limit=6, use_llm=False):
             cur.execute("""insert into lana.trades(signal_id,market,side,size,entry_price,status,mode)
                            values(%s,%s,%s,%s,%s,'open',%s)""", (sid, mk, side, size, round(price, 3), mode))
             traded += 1
-    notes = {"edge_th": edge_th, "conf_th": conf_th, "max_position": maxpos, "llm": use_llm,
-             "roles": 7, "arch": "ai-hedge-fund style: analytici→risk→exekuce→reviewer"}
+    notes = {"simulation_only": True, "edge_th": edge_th, "conf_th": conf_th,
+             "max_position": maxpos, "llm": use_llm, "roles": 7,
+             "arch": "legacy random prediction-market simulation; not a commodity signal"}
     cur.execute("insert into lana.crew_runs(mode,markets_scanned,signals_made,trades_made,notes) values(%s,%s,%s,%s,%s)",
                 (mode, scanned, made, traded, json.dumps(notes)))
     c.commit(); c.close()

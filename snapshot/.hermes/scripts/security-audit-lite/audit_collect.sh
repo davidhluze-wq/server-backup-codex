@@ -59,7 +59,6 @@ run_sh "system cron entries" 'ls -la /etc/cron.d /etc/cron.daily /etc/cron.hourl
 run_sh "running services" 'systemctl list-units --type=service --state=running --no-pager 2>/dev/null | sed -n "1,180p" || true'
 run_sh "top cpu/mem processes" 'ps aux --sort=-%cpu | head -25; echo; ps aux --sort=-%mem | head -25'
 run_sh "disk usage" 'df -h /; df -ih /'
-run_sh "backup hints" 'systemctl list-units --type=service --all --no-pager 2>/dev/null | egrep -i "backup|restic|borg|duplicity|rsync|rclone" || true; ls -ld /backup /backups /var/backups "$HOME/backups" "$HOME/.restic" 2>/dev/null || true'
 run_sh "exposed service package versions" 'printf "openssh-server\nnginx\napache2\npostgresql\nmysql-server\nmariadb-server\nredis-server\ndocker.io\ncontainerd\nnodejs\npython3\n" | while read p; do dpkg-query -W -f="${Package} ${Version}\n" "$p" 2>/dev/null; done'
 run_sh "Hermes/Codex/Claude process flags sample" 'ps aux | egrep -i "hermes|codex|claude|opencode|antigravity|openclaw" | grep -v egrep | sed -n "1,80p" || true'
 
